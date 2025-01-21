@@ -10,8 +10,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "my-lib": [
-        "./dist/my-lib"
+      "ngx-editor-js2": [
+        "./dist/ngx-editor-js2"
       ]
     },
     "skipLibCheck": true,

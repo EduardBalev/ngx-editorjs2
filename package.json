@@ -1,12 +1,12 @@
 {
-  "name": "my-workspace",
-  "version": "0.0.0",
+  "name": "my-workspace-demo",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "buildLib": "ng build my-lib --configuration development",
-    "watch": "ng build my-lib --watch --configuration development",
+    "buildLib": "ng build ngx-editor-js2 --configuration development",
+    "watch": "ng build ngx-editor-js2 --watch --configuration development",
     "test": "ng test"
   },
   "private": true,

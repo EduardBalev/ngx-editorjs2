@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { MyLibComponent } from 'my-lib';
+import { NgxEditorJs2Component } from 'ngx-editor-js2';
 
 @Component({
   selector: 'app-document',
-  imports: [MatCard, MatCardContent, MyLibComponent],
+  imports: [MatCard, MatCardContent, NgxEditorJs2Component],
   template: `
     <mat-card appearance="outlined">
       <mat-card-content>
-        <lib-my-lib></lib-my-lib>
+        <ngx-editor-js2></ngx-editor-js2>
       </mat-card-content>
     </mat-card>
   `,

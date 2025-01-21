@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MyLibService } from './my-lib.service';
+import { NgxEditorJs2Service } from './ngx-editor-js2.service';
 
-describe('MyLibService', () => {
-  let service: MyLibService;
+describe('NgxEditorJs2Service', () => {
+  let service: NgxEditorJs2Service;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(MyLibService);
+    service = TestBed.inject(NgxEditorJs2Service);
   });
 
   it('should be created', () => {

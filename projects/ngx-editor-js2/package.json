@@ -1,5 +1,5 @@
 {
-  "name": "my-lib",
+  "name": "@tmdjr/ngx-editor-js2",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^19.1.0",

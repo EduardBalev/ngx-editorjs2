@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MyLibComponent } from './my-lib.component';
+import { NgxEditorJs2Component } from './ngx-editor-js2.component';
 
-describe('MyLibComponent', () => {
-  let component: MyLibComponent;
-  let fixture: ComponentFixture<MyLibComponent>;
+describe('NgxEditorJs2Component', () => {
+  let component: NgxEditorJs2Component;
+  let fixture: ComponentFixture<NgxEditorJs2Component>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MyLibComponent]
+      imports: [NgxEditorJs2Component]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(MyLibComponent);
+    fixture = TestBed.createComponent(NgxEditorJs2Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
