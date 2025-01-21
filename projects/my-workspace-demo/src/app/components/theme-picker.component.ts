@@ -1,11 +1,13 @@
-import { KeyValuePipe } from '@angular/common';
-import { Component, inject, input, Signal } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
-import { ThemePickerService } from '../services/theme-picker.service';
+import {
+  DocsSiteTheme,
+  ThemePickerService,
+} from '../services/theme-picker.service';
 
 // Menu Item
 @Component({
@@ -18,12 +20,49 @@ import { ThemePickerService } from '../services/theme-picker.service';
       } @else {
       <mat-icon>radio_button_unchecked</mat-icon>
       }
-      <span>{{ themeText() }}</span>
+      <span>{{ theme().displayName }}</span>
+      <svg
+        matMenuItemIcon
+        class="theme-example-icon"
+        width="80"
+        height="80"
+        viewBox="0 0 80 80"
+      >
+        <path
+          class="theme-example-background"
+          d="M77.87 0C79.05 0 80 .95 80 2.13v75.74c0 1.17-.95 2.13-2.13 2.13H2.13C.96 80 0 79.04 0 77.87V2.13C0 .95.96 0 2.13 0h75.74z"
+        />
+        <path
+          [attr.fill]="theme().color"
+          d="M54 40c3.32 0 6 2.69 6 6 0 1.2 0-1.2 0 0 0 3.31-2.68 6-6 6H26c-3.31 0-6-2.69-6-6 0-1.2 0 1.2 0 0 0-3.31 2.69-6 6-6h28z"
+        />
+        <path [attr.fill]="theme().color" d="M0 0h80v17.24H0V0z" />
+      </svg>
     </button>
   `,
+  styles: [
+    `
+      :host {
+        .theme-example-icon {
+          margin-right: 0;
+          margin-left: 24px;
+          order: 1;
+          width: 24px;
+          height: 24px;
+          border-radius: 4px;
+          border: solid 1px
+            color-mix(in srgb, var(--mat-sys-outline-variant) 50%, transparent);
+
+          .theme-example-background {
+            fill: var(--mat-sys-surface-container-lowest);
+          }
+        }
+      }
+    `,
+  ],
 })
 export class ThemePickerMenuItemComponent {
-  themeText = input.required<string>();
+  theme = input.required<DocsSiteTheme>();
   isCurrentTheme = input.required<boolean>();
 }
 // Menu
@@ -31,7 +70,6 @@ export class ThemePickerMenuItemComponent {
   selector: 'app-theme-picker',
   imports: [
     MatIconButton,
-    KeyValuePipe,
     MatMenu,
     MatMenuTrigger,
     MatIcon,
@@ -57,11 +95,11 @@ export class ThemePickerMenuItemComponent {
           >Dark Mode</mat-slide-toggle
         >
       </div>
-      @for (theme of themes | keyvalue; track $index) {
+      @for (theme of themes; track $index) {
       <app-theme-picker-menu-item
-        [themeText]="theme.value"
-        [isCurrentTheme]="theme.key === currentTheme()"
-        (click)="selectTheme(theme.key)"
+        [theme]="theme"
+        [isCurrentTheme]="theme.name === currentTheme()"
+        (click)="selectTheme(theme.name)"
       ></app-theme-picker-menu-item>
       }
     </mat-menu>
