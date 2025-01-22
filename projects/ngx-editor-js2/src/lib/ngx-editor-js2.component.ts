@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
+import { EditorJsComponent } from './components/editor-js.component';
 
 @Component({
   selector: 'ngx-editor-js2',
-  imports: [],
-  template: `
-    <p>ngx-editor-js2 works!</p>
-  `,
-  styles: ``
+  imports: [EditorJsComponent],
+  template: `<editor-js></editor-js>`,
+  styles: ``,
 })
-export class NgxEditorJs2Component {
-
-}
+export class NgxEditorJs2Component {}
