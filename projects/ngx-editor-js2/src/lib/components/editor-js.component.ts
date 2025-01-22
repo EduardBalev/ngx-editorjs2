@@ -1,44 +1,30 @@
-import { Component, inject, ViewChild, ViewContainerRef } from '@angular/core';
 import {
-  ControlValueAccessor,
-  FormBuilder,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { MatButton } from '@angular/material/button';
+  Component,
+  effect,
+  inject,
+  viewChild,
+  ViewContainerRef,
+} from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { EditorJsService } from '../services/editor-js.service';
 
 @Component({
   selector: 'editor-js',
-  imports: [MatButton, ReactiveFormsModule],
+  imports: [ReactiveFormsModule],
   template: `
-    <button mat-button (click)="addFormControlComponent()">
-      Add Form Control Component
-    </button>
-    <form [formGroup]="formGroup">
+    <form [formGroup]="editorJsService.formGroup">
       <ng-container #ngxEditor></ng-container>
     </form>
   `,
-  styles: [],
 })
 export class EditorJsComponent {
-  @ViewChild('ngxEditor', { read: ViewContainerRef, static: true })
-  ngxEditor!: ViewContainerRef;
+  ngxEditor = viewChild.required('ngxEditor', { read: ViewContainerRef });
+  editorJsService = inject(EditorJsService);
 
-  formBuilder = inject(FormBuilder);
-  formGroup = this.formBuilder.group({});
-
-  addFormControlComponent() {
-    this.formGroup.addControl('test', this.formBuilder.control(''));
-    this.ngxEditor.createComponent(HeaderBlockComponent, { index: 0 });
+  // Imperative code 🤮
+  constructor() {
+    effect(() => {
+      this.editorJsService.setNgxEditor(this.ngxEditor());
+    });
   }
-}
-
-@Component({
-  selector: 'header-block',
-  template: ` <h1 contentEditable>Header Block</h1> `,
-})
-export class HeaderBlockComponent implements ControlValueAccessor {
-  writeValue(_obj: any): void {}
-  registerOnChange(_fn: any): void {}
-  registerOnTouched(_fn: any): void {}
-  setDisabledState?(_isDisabled: boolean): void {}
 }
