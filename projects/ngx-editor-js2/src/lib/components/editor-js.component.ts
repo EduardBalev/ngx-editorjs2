@@ -21,7 +21,7 @@ export class EditorJsComponent {
   ngxEditor = viewChild.required('ngxEditor', { read: ViewContainerRef });
   editorJsService = inject(EditorJsService);
 
-  // Imperative code 🤮
+  // ! This needs a better pattern for setting the ngxEditor
   constructor() {
     effect(() => {
       this.editorJsService.setNgxEditor(this.ngxEditor());
