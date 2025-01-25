@@ -11,17 +11,23 @@ import { EditorJsService } from '../services/editor-js.service';
 @Component({
   selector: 'editor-js',
   imports: [ReactiveFormsModule],
-  template: `
-    <form [formGroup]="editorJsService.formGroup">
-      <ng-container #ngxEditor></ng-container>
-    </form>
-  `,
+  template: ` <ng-container #ngxEditor></ng-container> `,
 })
 export class EditorJsComponent {
   ngxEditor = viewChild.required('ngxEditor', { read: ViewContainerRef });
   editorJsService = inject(EditorJsService);
 
-  // ! This needs a better pattern for setting the ngxEditor
+  // * JUST DEBUGGING
+  ngOnInit() {
+    this.editorJsService.formGroup.valueChanges.subscribe((value) => {
+      console.log('[formGroup.value] : ', value);
+    });
+
+    this.editorJsService.blockComponents$.subscribe((components) => {
+      console.log('[components] : ', components);
+    });
+  }
+
   constructor() {
     effect(() => {
       this.editorJsService.setNgxEditor(this.ngxEditor());
