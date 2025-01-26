@@ -51,6 +51,7 @@ import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component'
       :host {
         position: absolute;
         margin-left: -80px;
+        top: 0;
         .toolbar-buttons-container {
           position: relative;
           display: flex;

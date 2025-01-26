@@ -30,6 +30,13 @@ import { ToolFabDirective } from '../directives/tool-fab.directive';
       ></h1>
     </ng-container>
   `,
+  styles: [
+    `
+      :host {
+        position: relative;
+      }
+    `,
+  ],
 })
 export class HeaderBlockComponent implements BlockComponent {
   formGroup = input.required<FormGroup>();

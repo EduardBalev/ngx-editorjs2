@@ -22,7 +22,6 @@ export class ToolFabService {
     ),
     map(({ viewContainerRef, blockOptionActions, actionCallback }) => {
       const componentRef = viewContainerRef.createComponent(ToolbarComponent);
-      componentRef.location.nativeElement.style.top = `${viewContainerRef.element.nativeElement.offsetTop}px`;
       componentRef.setInput('blockOptionActions', blockOptionActions);
       componentRef.setInput('actionCallback', actionCallback);
       return componentRef;
