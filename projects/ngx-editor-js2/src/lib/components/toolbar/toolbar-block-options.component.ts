@@ -4,12 +4,11 @@ import {
   BlockOptionAction,
 } from '../../services/editor-js.service';
 import { MatIcon } from '@angular/material/icon';
-import { NgForOf, NgIf } from '@angular/common';
 import { MatRipple } from '@angular/material/core';
 
 @Component({
   selector: 'toolbar-block-options',
-  imports: [MatIcon, MatRipple, NgForOf, NgIf],
+  imports: [MatIcon, MatRipple],
   template: `
     <div class="toolbar-block-options-container mat-elevation-z8">
       <div class="toolbar-block-options-panel">
