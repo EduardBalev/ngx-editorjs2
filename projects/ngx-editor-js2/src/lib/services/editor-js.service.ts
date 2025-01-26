@@ -1,4 +1,10 @@
-import { inject, Injectable, InputSignal, Type, ViewContainerRef } from '@angular/core';
+import {
+  inject,
+  Injectable,
+  InputSignal,
+  Type,
+  ViewContainerRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, combineLatest, of, tap } from 'rxjs';
 
@@ -16,10 +22,10 @@ export interface BlockOptionAction {
   text?: string;
 }
 
-export enum AdjustBlockPositionActions {
+export enum MovePositionActions {
   UP = 'UP',
   DOWN = 'DOWN',
-  DELETE = 'DELETE'
+  DELETE = 'DELETE',
 }
 
 @Injectable({
@@ -27,7 +33,7 @@ export enum AdjustBlockPositionActions {
 })
 export class EditorJsService {
   formBuilder = inject(FormBuilder);
-  
+
   ngxEditor!: ViewContainerRef;
   formGroup = this.formBuilder.group({});
 
@@ -59,9 +65,11 @@ export class EditorJsService {
   }
 
   attachComponent(component: Type<BlockComponent>, controlName: string) {
-    return of(this.ngxEditor.createComponent(component, {
-      index: 0,
-    })).pipe(
+    return of(
+      this.ngxEditor.createComponent(component, {
+        index: 0,
+      })
+    ).pipe(
       tap((componentRef) => {
         componentRef.setInput('formGroup', this.formGroup);
         componentRef.setInput('formControlName', controlName);

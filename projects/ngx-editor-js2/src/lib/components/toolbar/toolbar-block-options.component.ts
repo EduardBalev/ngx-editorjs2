@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import {
-  AdjustBlockPositionActions,
+  MovePositionActions,
   BlockOptionAction,
 } from '../../services/editor-js.service';
 import { MatIcon } from '@angular/material/icon';
@@ -10,108 +10,80 @@ import { MatRipple } from '@angular/material/core';
   selector: 'toolbar-block-options',
   imports: [MatIcon, MatRipple],
   template: `
-    <div class="toolbar-block-options-container mat-elevation-z8">
-      <div class="toolbar-block-options-panel">
-        <div
-          class="block-option-list-item"
-          matRipple
-          (click)="adjustBlockPosition(AdjustBlockPositionActions.UP)"
-        >
-          <mat-icon>arrow_upward</mat-icon>
-        </div>
-        <div
-          class="block-option-list-item"
-          matRipple
-          (click)="adjustBlockPosition(AdjustBlockPositionActions.DELETE)"
-        >
-          <mat-icon>delete</mat-icon>
-        </div>
-        <div
-          class="block-option-list-item"
-          matRipple
-          (click)="adjustBlockPosition(AdjustBlockPositionActions.DOWN)"
-        >
-          <mat-icon>arrow_downward</mat-icon>
-        </div>
-        @for(blockOptionAction of blockOptionActions; track $index) {
-        <div
-          class="block-option-list-item"
-          (click)="handleBlockOptionAction(blockOptionAction.action)"
-          matRipple
-        >
-          @if (blockOptionAction.icon) {
-          <mat-icon>{{ blockOptionAction.icon }}</mat-icon>
-          } 
-          
-          @if (blockOptionAction.text) {
-          <span class="block-option-list-item-text">
-            {{ blockOptionAction.text }}
-          </span>
-          }
-        </div>
+    <div class="actions-panel">
+      <div class="action-btn" matRipple (click)="movePosition(Position.UP)">
+        <mat-icon>arrow_upward</mat-icon>
+      </div>
+      <div class="action-btn" matRipple (click)="movePosition(Position.DELETE)">
+        <mat-icon>delete</mat-icon>
+      </div>
+      <div class="action-btn" matRipple (click)="movePosition(Position.DOWN)">
+        <mat-icon>arrow_downward</mat-icon>
+      </div>
+      @for(blockOptionAction of blockOptionActions(); track $index) {
+      <div
+        class="action-btn"
+        (click)="handleAction(blockOptionAction.action)"
+        matRipple
+      >
+        @if (blockOptionAction.text) {
+        {{ blockOptionAction.text }}
+        } @else {
+        <mat-icon>{{ blockOptionAction.icon }}</mat-icon>
         }
       </div>
+      }
     </div>
   `,
   styles: [
     `
-      .toolbar-block-options-container {
-        border-radius: 4px;
-      }
+      :host {
+        .actions-panel {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 1px;
+          width: 128px;
+          max-height: 128px;
+          border-radius: 4px;
+          overflow: auto;
+          background: var(--mat-sys-tertiary-container);
+          .action-btn {
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
 
-      .toolbar-block-options-panel {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1px;
-        width: 128px;
-        max-height: 128px;
-        border-radius: 4px;
-        overflow: auto;
-        background: var(--mat-sys-tertiary-container);
-      }
-
-      .block-option-list-item {
-        cursor: pointer;
-        width: 42px;
-        height: 42px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-
-        color: var(--mat-sys-on-tertiary-container);
-        background: var(--mat-sys-tertiary-container);
-        &:hover,
-        &:focus {
-          background: var(--mat-sys-surface-bright);
+            color: var(--mat-sys-on-tertiary-container);
+            background: var(--mat-sys-tertiary-container);
+            &:hover,
+            &:focus {
+              background: var(--mat-sys-surface-bright);
+            }
+          }
         }
-      }
-
-      .block-option-list-item-text {
-        font-size: 16px;
-      }
-
-      .block-option-list-item-text {
-        user-select: none;
       }
     `,
   ],
 })
 export class ToolbarBlockOptionsComponent {
-  @Input() blockOptionActions: BlockOptionAction[] | undefined;
-  @Output('handleBlockOptionAction') handleBlockOptionActionEmitter =
-    new EventEmitter();
+  readonly Position = MovePositionActions;
 
-  readonly AdjustBlockPositionActions = AdjustBlockPositionActions;
-  @Output('adjustBlockPosition') adjustBlockPositionEmitter =
-    new EventEmitter();
+  blockOptionActions = input<BlockOptionAction[]>();
 
-  adjustBlockPosition(action: AdjustBlockPositionActions) {
-    this.adjustBlockPositionEmitter.emit(action);
+  handleActionEmitter = output<string>({ alias: 'handleAction' });
+  moveBlockPositionEmitter = output<MovePositionActions>({
+    alias: 'moveBlockPosition',
+  });
+
+  movePosition(action: MovePositionActions) {
+    this.moveBlockPositionEmitter.emit(action);
   }
 
-  handleBlockOptionAction(action: string) {
-    this.handleBlockOptionActionEmitter.emit(action);
+  handleAction(action: string) {
+    this.handleActionEmitter.emit(action);
   }
 }

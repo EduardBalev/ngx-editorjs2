@@ -41,8 +41,8 @@ import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component'
     >
       <toolbar-block-options
         [blockOptionActions]="blockOptionActions()"
-        (handleBlockOptionAction)="handleBlockOptionAction($event)"
-        (adjustBlockPosition)="adjustBlockPosition($event)"
+        (handleAction)="handleAction($event)"
+        (moveBlockPosition)="moveBlockPosition($event)"
       ></toolbar-block-options>
     </ng-template>
   `,
@@ -96,11 +96,11 @@ export class ToolbarComponent {
     this.openBlocksOption = !this.openBlocksOption;
   }
 
-  handleBlockOptionAction(action: string) {
+  handleAction(action: string) {
     this.actionCallback()(action);
   }
 
-  adjustBlockPosition(action: string) {
+  moveBlockPosition(action: string) {
     console.log('adjustBlockPosition', action);
   }
 }
