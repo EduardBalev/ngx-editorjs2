@@ -2,11 +2,11 @@ import { Component, input } from '@angular/core';
 import {
   BlockComponent,
   BlockOptionAction,
-} from '../services/editor-js.service';
-import { ControlAccessorDirective } from '../directives/control-accessor.directive';
+} from '../../services/editor-js.service';
+import { ControlAccessorDirective } from '../../directives/control-accessor.directive';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { AutofocusDirective } from '../directives/autofocus.directive';
-import { ToolFabDirective } from '../directives/tool-fab.directive';
+import { AutofocusDirective } from '../../directives/autofocus.directive';
+import { ToolFabDirective } from '../../directives/tool-fab.directive';
 
 @Component({
   selector: 'header-block',
@@ -25,7 +25,6 @@ import { ToolFabDirective } from '../directives/tool-fab.directive';
         [autofocus]="true"
         [actionCallback]="actionCallback"
         [blockOptionActions]="blockOptionActions()"
-        [defaultValue]="'Hello World'"
         [formControlName]="formControlName()"
       ></h1>
     </ng-container>

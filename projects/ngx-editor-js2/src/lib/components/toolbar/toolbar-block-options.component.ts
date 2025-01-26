@@ -10,7 +10,7 @@ import { MatRipple } from '@angular/material/core';
   selector: 'toolbar-block-options',
   imports: [MatIcon, MatRipple],
   template: `
-    <div class="actions-panel">
+    <div class="actions-panel mat-elevation-z24">
       <div class="action-btn" matRipple (click)="movePosition(Position.UP)">
         <mat-icon>arrow_upward</mat-icon>
       </div>

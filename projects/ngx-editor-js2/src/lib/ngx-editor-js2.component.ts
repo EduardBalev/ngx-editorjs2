@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { EditorJsComponent } from './components/editor-js.component';
 import { MatButton } from '@angular/material/button';
 import { EditorJsService } from './services/editor-js.service';
-import { HeaderBlockComponent } from './components/header-block.component';
+import { HeaderBlockComponent } from './components/blocks/header-block.component';
 import { firstValueFrom } from 'rxjs';
 import { ToolFabService } from './services/tool-fab.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
