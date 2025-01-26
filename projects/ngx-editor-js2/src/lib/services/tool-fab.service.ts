@@ -14,11 +14,15 @@ import { BlockOptionAction } from './editor-js.service';
   providedIn: 'root',
 })
 export class ToolFabService {
+  // I need to explain this in detail so the future me can understand this.
   destroyStream$ = new Subject<boolean>();
+  
   componentContext = new BehaviorSubject<{
     viewContainerRef: ViewContainerRef;
     blockOptionActions: BlockOptionAction[];
+    handleBlockOptionAction: (v: string) => void;
   } | null>(null);
+
   componentContext$ = this.componentContext
     .asObservable()
     .pipe(
@@ -28,11 +32,17 @@ export class ToolFabService {
         ({ viewContainerRef: previous }, { viewContainerRef: current }) =>
           previous !== current ? (previous.clear(), false) : true
       ),
-      tap(({ viewContainerRef, blockOptionActions }) => {
-        const componentRef = viewContainerRef.createComponent(ToolbarComponent);
-        componentRef.location.nativeElement.style.top = `${viewContainerRef.element.nativeElement.offsetTop}px`;
-        componentRef.setInput('blockOptionActions', blockOptionActions);
-      })
+      tap(
+        ({ viewContainerRef, blockOptionActions, handleBlockOptionAction }) => {
+          const componentRef =
+            viewContainerRef.createComponent(ToolbarComponent);
+          componentRef.location.nativeElement.style.top = `${viewContainerRef.element.nativeElement.offsetTop}px`;
+          componentRef.setInput('blockOptionActions', blockOptionActions);
+          componentRef.instance.handleBlockOptionActionEmitter.subscribe(
+            (value) => handleBlockOptionAction(value)
+          );
+        }
+      )
     )
     .subscribe();
 }

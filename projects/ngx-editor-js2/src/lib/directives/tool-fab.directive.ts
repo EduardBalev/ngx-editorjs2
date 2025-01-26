@@ -4,6 +4,7 @@ import {
   HostListener,
   inject,
   input,
+  output,
   ViewContainerRef,
 } from '@angular/core';
 import { ToolFabService } from '../services/tool-fab.service';
@@ -17,13 +18,14 @@ export class ToolFabDirective {
   viewContainerRef = inject(ViewContainerRef);
 
   blockOptionActions = input<BlockOptionAction[]>();
+  handleBlockOptionAction = input.required<(v: string) => void>();
 
   @HostListener('mouseenter') onMouseEnter() {
     this.toolFabService.componentContext.next({
       viewContainerRef: this.viewContainerRef,
       blockOptionActions: this.blockOptionActions() ?? [],
-    }
-    );
+      handleBlockOptionAction: this.handleBlockOptionAction(),
+    });
   }
 
   constructor() {

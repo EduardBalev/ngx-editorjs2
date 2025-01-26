@@ -20,6 +20,7 @@ import { ToolFabDirective } from '../directives/tool-fab.directive';
     <ng-container [formGroup]="formGroup()">
       <h1
         toolFab
+        [handleBlockOptionAction]="handleBlockOptionAction"
         [blockOptionActions]="blockOptionActions()"
         contentEditable
         appControlAccessor
@@ -41,4 +42,8 @@ export class HeaderBlockComponent implements BlockComponent {
     { action: 'h5', text: 'H5' },
     { action: 'h6', text: 'H6' },
   ]);
+
+  handleBlockOptionAction() {
+    console.log('In da Component!');
+  }
 }

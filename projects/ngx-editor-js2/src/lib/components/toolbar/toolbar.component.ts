@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { BlockOptionAction } from '../../services/editor-js.service';
@@ -82,8 +82,8 @@ import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component'
   ],
 })
 export class ToolbarComponent {
-  // @Input() blockOptionActions: BlockOptionAction[] | undefined;
   blockOptionActions = input<BlockOptionAction[]>();
+  handleBlockOptionActionEmitter = output<string>();
 
   openBlocksOption = false;
 
@@ -92,12 +92,11 @@ export class ToolbarComponent {
   }
 
   openBlockOptionList() {
-    console.log('openBlockOptionList');
     this.openBlocksOption = !this.openBlocksOption;
   }
 
   handleBlockOptionAction(action: string) {
-    console.log('handleBlockOptionAction', action);
+    this.handleBlockOptionActionEmitter.emit(action);
   }
 
   adjustBlockPosition(action: string) {
