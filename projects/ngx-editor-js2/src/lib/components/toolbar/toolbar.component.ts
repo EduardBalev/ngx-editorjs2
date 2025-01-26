@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
-import { CdkOverlayOrigin } from '@angular/cdk/overlay';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { BlockOptionAction } from '../../services/editor-js.service';
+import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component';
 
 @Component({
   selector: 'toolbar',
-  imports: [MatRipple, CdkOverlayOrigin],
+  imports: [MatRipple, OverlayModule, ToolbarBlockOptionsComponent],
   template: `
     <div class="toolbar-buttons-container">
       <div
@@ -26,12 +28,29 @@ import { CdkOverlayOrigin } from '@angular/cdk/overlay';
         <span class="material-icons">drag_indicator</span>
       </div>
     </div>
+
+    <ng-template
+      cdkConnectedOverlay
+      (overlayOutsideClick)="openBlocksOption = false"
+      [cdkConnectedOverlayOrigin]="blockOptionListTigger"
+      [cdkConnectedOverlayOpen]="openBlocksOption"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      [cdkConnectedOverlayOffsetX]="-49"
+      [cdkConnectedOverlayOffsetY]="15"
+      [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
+    >
+      <toolbar-block-options
+        [blockOptionActions]="blockOptionActions()"
+        (handleBlockOptionAction)="handleBlockOptionAction($event)"
+        (adjustBlockPosition)="adjustBlockPosition($event)"
+      ></toolbar-block-options>
+    </ng-template>
   `,
   styles: [
     `
       :host {
         position: absolute;
-        margin-left: -95px;
+        margin-left: -80px;
         .toolbar-buttons-container {
           position: relative;
           display: flex;
@@ -63,11 +82,25 @@ import { CdkOverlayOrigin } from '@angular/cdk/overlay';
   ],
 })
 export class ToolbarComponent {
+  // @Input() blockOptionActions: BlockOptionAction[] | undefined;
+  blockOptionActions = input<BlockOptionAction[]>();
+
+  openBlocksOption = false;
+
   openBlocksList() {
     console.log('openBlocksList');
   }
 
   openBlockOptionList() {
     console.log('openBlockOptionList');
+    this.openBlocksOption = !this.openBlocksOption;
+  }
+
+  handleBlockOptionAction(action: string) {
+    console.log('handleBlockOptionAction', action);
+  }
+
+  adjustBlockPosition(action: string) {
+    console.log('adjustBlockPosition', action);
   }
 }

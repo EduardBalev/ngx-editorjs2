@@ -7,6 +7,19 @@ const createUID = () => Math.random().toString(36).substring(7);
 export interface BlockComponent {
   formControlName: InputSignal<string>;
   formGroup: InputSignal<FormGroup>;
+  blockOptionActions: InputSignal<BlockOptionAction[]>;
+}
+
+export interface BlockOptionAction {
+  action: string;
+  icon?: string;
+  text?: string;
+}
+
+export enum AdjustBlockPositionActions {
+  UP = 'UP',
+  DOWN = 'DOWN',
+  DELETE = 'DELETE'
 }
 
 @Injectable({
