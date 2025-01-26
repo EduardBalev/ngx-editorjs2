@@ -1,14 +1,17 @@
 import {
+  ComponentRef,
   Directive,
-  effect,
   HostListener,
   inject,
   input,
-  output,
   ViewContainerRef,
 } from '@angular/core';
 import { ToolFabService } from '../services/tool-fab.service';
 import { BlockOptionAction } from '../services/editor-js.service';
+import { Observable } from 'rxjs';
+import { ToolbarComponent } from '../components/toolbar/toolbar.component';
+
+export type ToolbarComponentRef = Observable<ComponentRef<ToolbarComponent>>;
 
 @Directive({
   selector: '[toolFab]',
@@ -18,19 +21,13 @@ export class ToolFabDirective {
   viewContainerRef = inject(ViewContainerRef);
 
   blockOptionActions = input<BlockOptionAction[]>();
-  handleBlockOptionAction = input.required<(v: string) => void>();
+  actionCallback = input.required<(action: string) => void>();
 
   @HostListener('mouseenter') onMouseEnter() {
     this.toolFabService.componentContext.next({
       viewContainerRef: this.viewContainerRef,
       blockOptionActions: this.blockOptionActions() ?? [],
-      handleBlockOptionAction: this.handleBlockOptionAction(),
-    });
-  }
-
-  constructor() {
-    effect(() => {
-      console.log('[blockOptionActions] : ', this.blockOptionActions());
+      actionCallback: this.actionCallback(),
     });
   }
 }

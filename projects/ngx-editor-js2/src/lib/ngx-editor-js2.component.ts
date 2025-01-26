@@ -1,10 +1,11 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { EditorJsComponent } from './components/editor-js.component';
 import { MatButton } from '@angular/material/button';
 import { EditorJsService } from './services/editor-js.service';
 import { HeaderBlockComponent } from './components/header-block.component';
 import { firstValueFrom } from 'rxjs';
 import { ToolFabService } from './services/tool-fab.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'ngx-editor-js2',
@@ -18,7 +19,7 @@ import { ToolFabService } from './services/tool-fab.service';
     </div>
   `,
 })
-export class NgxEditorJs2Component implements OnDestroy {
+export class NgxEditorJs2Component {
   editorJsService = inject(EditorJsService);
   toolFabService = inject(ToolFabService);
 
@@ -28,7 +29,9 @@ export class NgxEditorJs2Component implements OnDestroy {
     );
   }
 
-  ngOnDestroy() {
-    this.toolFabService.destroyStream$.next(true);
+  constructor() {
+    this.toolFabService.toolbarComponentRef$
+      .pipe(takeUntilDestroyed())
+      .subscribe(); // 1st and only subscription?
   }
 }

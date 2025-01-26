@@ -83,7 +83,7 @@ import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component'
 })
 export class ToolbarComponent {
   blockOptionActions = input<BlockOptionAction[]>();
-  handleBlockOptionActionEmitter = output<string>();
+  actionCallback = input.required<(action: string) => void>();
 
   openBlocksOption = false;
 
@@ -96,7 +96,7 @@ export class ToolbarComponent {
   }
 
   handleBlockOptionAction(action: string) {
-    this.handleBlockOptionActionEmitter.emit(action);
+    this.actionCallback()(action);
   }
 
   adjustBlockPosition(action: string) {

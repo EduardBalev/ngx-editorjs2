@@ -9,7 +9,7 @@ import { MatRipple } from '@angular/material/core';
 
 @Component({
   selector: 'toolbar-block-options',
-  imports: [MatIcon, MatRipple, NgForOf,  NgIf],
+  imports: [MatIcon, MatRipple, NgForOf, NgIf],
   template: `
     <div class="toolbar-block-options-container mat-elevation-z8">
       <div class="toolbar-block-options-panel">
@@ -34,21 +34,23 @@ import { MatRipple } from '@angular/material/core';
         >
           <mat-icon>arrow_downward</mat-icon>
         </div>
+        @for(blockOptionAction of blockOptionActions; track $index) {
         <div
           class="block-option-list-item"
-          *ngFor="let blockOptionAction of blockOptionActions"
           (click)="handleBlockOptionAction(blockOptionAction.action)"
           matRipple
         >
-          <mat-icon *ngIf="blockOptionAction.icon">{{
-            blockOptionAction.icon
-          }}</mat-icon>
-          <span
-            *ngIf="blockOptionAction.text"
-            class="block-option-list-item-text"
-            >{{ blockOptionAction.text }}</span
-          >
+          @if (blockOptionAction.icon) {
+          <mat-icon>{{ blockOptionAction.icon }}</mat-icon>
+          } 
+          
+          @if (blockOptionAction.text) {
+          <span class="block-option-list-item-text">
+            {{ blockOptionAction.text }}
+          </span>
+          }
         </div>
+        }
       </div>
     </div>
   `,

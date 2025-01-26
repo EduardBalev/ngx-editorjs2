@@ -20,11 +20,11 @@ import { ToolFabDirective } from '../directives/tool-fab.directive';
     <ng-container [formGroup]="formGroup()">
       <h1
         toolFab
-        [handleBlockOptionAction]="handleBlockOptionAction"
-        [blockOptionActions]="blockOptionActions()"
         contentEditable
         appControlAccessor
         [autofocus]="true"
+        [actionCallback]="actionCallback"
+        [blockOptionActions]="blockOptionActions()"
         [defaultValue]="'Hello World'"
         [formControlName]="formControlName()"
       ></h1>
@@ -43,7 +43,7 @@ export class HeaderBlockComponent implements BlockComponent {
     { action: 'h6', text: 'H6' },
   ]);
 
-  handleBlockOptionAction() {
+  actionCallback() {
     console.log('In da Component!');
   }
 }
