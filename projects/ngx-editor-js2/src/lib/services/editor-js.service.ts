@@ -1,12 +1,12 @@
-import { inject, Injectable, Type, ViewContainerRef } from '@angular/core';
+import { inject, Injectable, InputSignal, Type, ViewContainerRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, combineLatest, of, tap } from 'rxjs';
 
 const createUID = () => Math.random().toString(36).substring(7);
 
 export interface BlockComponent {
-  formControlName: string;
-  formGroup: FormGroup;
+  formControlName: InputSignal<string>;
+  formGroup: InputSignal<FormGroup>;
 }
 
 @Injectable({
@@ -50,8 +50,8 @@ export class EditorJsService {
       index: 0,
     })).pipe(
       tap((componentRef) => {
-        componentRef.instance.formGroup = this.formGroup;
-        componentRef.instance.formControlName = controlName;
+        componentRef.setInput('formGroup', this.formGroup);
+        componentRef.setInput('formControlName', controlName);
       })
     );
   }

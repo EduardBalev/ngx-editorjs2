@@ -32,8 +32,8 @@ import { CdkOverlayOrigin } from '@angular/cdk/overlay';
       :host {
         position: absolute;
         margin-left: -95px;
-        top: 0;
         .toolbar-buttons-container {
+          position: relative;
           display: flex;
           gap: 10px;
         }

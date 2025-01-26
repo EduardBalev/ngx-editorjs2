@@ -18,15 +18,15 @@ export class EditorJsComponent {
   editorJsService = inject(EditorJsService);
 
   // * JUST DEBUGGING
-  ngOnInit() {
-    this.editorJsService.formGroup.valueChanges.subscribe((value) => {
-      console.log('[formGroup.value] : ', value);
-    });
+  // ngOnInit() {
+  //   this.editorJsService.formGroup.valueChanges.subscribe((value) => {
+  //     console.log('[formGroup.value] : ', value);
+  //   });
 
-    this.editorJsService.blockComponents$.subscribe((components) => {
-      console.log('[components] : ', components);
-    });
-  }
+  //   this.editorJsService.blockComponents$.subscribe((components) => {
+  //     console.log('[components] : ', components);
+  //   });
+  // }
 
   constructor() {
     effect(() => {
