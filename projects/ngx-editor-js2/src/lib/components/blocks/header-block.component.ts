@@ -7,6 +7,7 @@ import { ControlAccessorDirective } from '../../directives/control-accessor.dire
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { ToolFabDirective } from '../../directives/tool-fab.directive';
+import { CleanPasteDataDirective } from '../../directives/clean-paste-data.directive';
 
 @Component({
   selector: 'header-block',
@@ -15,6 +16,7 @@ import { ToolFabDirective } from '../../directives/tool-fab.directive';
     ControlAccessorDirective,
     AutofocusDirective,
     ToolFabDirective,
+    CleanPasteDataDirective,
   ],
   template: `
     <ng-container [formGroup]="formGroup()">
@@ -22,7 +24,8 @@ import { ToolFabDirective } from '../../directives/tool-fab.directive';
         toolFab
         contentEditable
         appControlAccessor
-        [autofocus]="true"
+        cleanPasteData
+        [autofocus]="autofocus()"
         [actionCallback]="actionCallback"
         [blockOptionActions]="blockOptionActions()"
         [formControlName]="formControlName()"
@@ -38,6 +41,7 @@ import { ToolFabDirective } from '../../directives/tool-fab.directive';
   ],
 })
 export class HeaderBlockComponent implements BlockComponent {
+  autofocus = input<boolean>(false);
   formGroup = input.required<FormGroup>();
   formControlName = input.required<string>();
   blockOptionActions = input<BlockOptionAction[]>([

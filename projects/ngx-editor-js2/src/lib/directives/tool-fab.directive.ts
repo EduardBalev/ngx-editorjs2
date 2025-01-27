@@ -1,6 +1,7 @@
 import {
   ComponentRef,
   Directive,
+  effect,
   HostListener,
   inject,
   input,
@@ -19,6 +20,7 @@ export type ToolbarComponentRef = Observable<ComponentRef<ToolbarComponent>>;
 export class ToolFabDirective {
   toolFabService = inject(ToolFabService);
   viewContainerRef = inject(ViewContainerRef);
+  autofocus = input<boolean>();
 
   blockOptionActions = input<BlockOptionAction[]>();
   actionCallback = input.required<(action: string) => void>();
@@ -28,6 +30,12 @@ export class ToolFabDirective {
       viewContainerRef: this.viewContainerRef,
       blockOptionActions: this.blockOptionActions() ?? [],
       actionCallback: this.actionCallback(),
+    });
+  }
+
+  constructor() {
+    effect(() => {
+      this.autofocus() && this.onMouseEnter();
     });
   }
 }
