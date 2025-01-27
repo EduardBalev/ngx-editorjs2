@@ -1,12 +1,20 @@
-import { Component, input, output } from '@angular/core';
+import { Component, Input, input, output } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { BlockOptionAction } from '../../services/editor-js.service';
 import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component';
+import { ToolbarBlocksComponent } from './toolbar-blocks.component';
+import { ConsumerSupportedBlock } from '../../services/ngx-editor-js2.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'toolbar',
-  imports: [MatRipple, OverlayModule, ToolbarBlockOptionsComponent],
+  imports: [
+    MatRipple,
+    OverlayModule,
+    ToolbarBlockOptionsComponent,
+    ToolbarBlocksComponent,
+  ],
   template: `
     <div class="toolbar-buttons-container">
       <div
@@ -29,6 +37,23 @@ import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component'
       </div>
     </div>
 
+    <!-- Block type search list -->
+    <ng-template
+      cdkConnectedOverlay
+      (overlayOutsideClick)="openBlocks = false"
+      [cdkConnectedOverlayOrigin]="blockListTigger"
+      [cdkConnectedOverlayOpen]="openBlocks"
+      [cdkConnectedOverlayHasBackdrop]="true"
+      [cdkConnectedOverlayOffsetY]="15"
+      [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'"
+    >
+      <toolbar-blocks
+        [supportedBlocks]="supportedBlocks()"
+        (addBlock)="addBlock($event)"
+      ></toolbar-blocks>
+    </ng-template>
+
+    <!-- Options List-->
     <ng-template
       cdkConnectedOverlay
       (overlayOutsideClick)="openBlocksOption = false"
@@ -57,7 +82,6 @@ import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component'
           display: flex;
           gap: 10px;
         }
-
         .toolbar-buttons {
           cursor: pointer;
           width: 30px;
@@ -71,7 +95,6 @@ import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component'
           color: var(--mat-sys-on-tertiary-container);
           background: var(--mat-sys-tertiary-container);
         }
-
         .toolbar-buttons {
           &:hover,
           &:focus {
@@ -85,11 +108,14 @@ import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component'
 export class ToolbarComponent {
   blockOptionActions = input<BlockOptionAction[]>();
   actionCallback = input.required<(action: string) => void>();
+  supportedBlocks = input.required<ConsumerSupportedBlock[]>();
 
+  // Keeping it simple open close logic
+  openBlocks = false;
   openBlocksOption = false;
 
   openBlocksList() {
-    console.log('openBlocksList');
+    this.openBlocks = !this.openBlocks;
   }
 
   openBlockOptionList() {
@@ -102,5 +128,9 @@ export class ToolbarComponent {
 
   moveBlockPosition(action: string) {
     console.log('adjustBlockPosition', action);
+  }
+
+  addBlock(block: any) {
+    console.log('addBlock', block);
   }
 }
