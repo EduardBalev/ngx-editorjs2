@@ -4,7 +4,6 @@ import {
   combineLatest,
   distinctUntilChanged,
   filter,
-  flatMap,
   map,
 } from 'rxjs';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';

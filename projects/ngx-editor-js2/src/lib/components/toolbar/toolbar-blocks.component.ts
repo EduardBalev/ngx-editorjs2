@@ -1,13 +1,14 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, Input, input, output } from '@angular/core';
+import { Component, input, output, Type } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatRipple } from '@angular/material/core';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatList, MatListItem } from '@angular/material/list';
-import { combineLatest, map, Observable, of, startWith } from 'rxjs';
-import { ConsumerSupportedBlock } from '../../services/ngx-editor-js2.service';
+import { combineLatest, map, startWith } from 'rxjs';
+import { SupportedBlock } from '../../services/ngx-editor-js2.service';
+import { BlockComponent } from '../../services/editor-js.service';
 
 @Component({
   selector: 'toolbar-blocks',
@@ -80,8 +81,8 @@ import { ConsumerSupportedBlock } from '../../services/ngx-editor-js2.service';
   ],
 })
 export class ToolbarBlocksComponent {
-  addBlockEmitter = output<string>({ alias: 'addBlock' });
-  supportedBlocks = input<ConsumerSupportedBlock[]>([]);
+  addBlockEmitter = output<Type<BlockComponent>>({ alias: 'addBlock' });
+  supportedBlocks = input<SupportedBlock[]>([]);
   supportedBlocks$ = toObservable(this.supportedBlocks);
 
   blockCtrl = new FormControl([]);
@@ -102,7 +103,7 @@ export class ToolbarBlocksComponent {
     })
   );
 
-  addBlock(block: any) {
-    this.addBlockEmitter.emit(block);
+  addBlock(block: SupportedBlock) {
+    this.addBlockEmitter.emit(block?.component);
   }
 }

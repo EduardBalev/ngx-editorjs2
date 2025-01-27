@@ -66,9 +66,7 @@ export class EditorJsService {
 
   attachComponent(component: Type<BlockComponent>, controlName: string) {
     return of(
-      this.ngxEditor.createComponent(component, {
-        index: 0,
-      })
+      this.ngxEditor.createComponent(component)
     ).pipe(
       tap((componentRef) => {
         componentRef.setInput('formGroup', this.formGroup);

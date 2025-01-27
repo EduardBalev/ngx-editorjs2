@@ -1,11 +1,15 @@
-import { Component, Input, input, output } from '@angular/core';
+import { Component, inject, Input, input, output, Type } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { BlockOptionAction } from '../../services/editor-js.service';
+import {
+  BlockComponent,
+  BlockOptionAction,
+  EditorJsService,
+} from '../../services/editor-js.service';
 import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component';
 import { ToolbarBlocksComponent } from './toolbar-blocks.component';
-import { ConsumerSupportedBlock } from '../../services/ngx-editor-js2.service';
-import { Observable } from 'rxjs';
+import { SupportedBlock } from '../../services/ngx-editor-js2.service';
+import { firstValueFrom, Observable } from 'rxjs';
 
 @Component({
   selector: 'toolbar',
@@ -106,9 +110,13 @@ import { Observable } from 'rxjs';
   ],
 })
 export class ToolbarComponent {
+  editorJsService = inject(EditorJsService);
+
   blockOptionActions = input<BlockOptionAction[]>();
+  supportedBlocks = input.required<SupportedBlock[]>();
   actionCallback = input.required<(action: string) => void>();
-  supportedBlocks = input.required<ConsumerSupportedBlock[]>();
+  addBlockCallback =
+    input.required<(block: Type<BlockComponent>) => Observable<unknown>>();
 
   // Keeping it simple open close logic
   openBlocks = false;
@@ -122,15 +130,21 @@ export class ToolbarComponent {
     this.openBlocksOption = !this.openBlocksOption;
   }
 
-  handleAction(action: string) {
-    this.actionCallback()(action);
-  }
-
   moveBlockPosition(action: string) {
     console.log('adjustBlockPosition', action);
   }
 
-  addBlock(block: any) {
-    console.log('addBlock', block);
+  handleAction(action: string) {
+    this.actionCallback()(action);
+  }
+
+  addBlock(block: Type<BlockComponent>) {
+    this.closeLists();
+    firstValueFrom(this.editorJsService.addBlockComponent(block));
+  }
+
+  closeLists() {
+    this.openBlocks = false;
+    this.openBlocksOption = false;
   }
 }
