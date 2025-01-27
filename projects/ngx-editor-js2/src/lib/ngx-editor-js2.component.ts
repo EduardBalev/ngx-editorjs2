@@ -6,6 +6,7 @@ import { HeaderBlockComponent } from './components/blocks/header-block.component
 import { firstValueFrom } from 'rxjs';
 import { ToolFabService } from './services/tool-fab.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ParagraphBlockComponent } from './components/blocks/paragraph-block.component';
 
 @Component({
   selector: 'ngx-editor-js2',
@@ -25,7 +26,7 @@ export class NgxEditorJs2Component {
 
   addBlockComponent() {
     void firstValueFrom(
-      this.editorJsService.addBlockComponent(HeaderBlockComponent)
+      this.editorJsService.addBlockComponent(ParagraphBlockComponent)
     );
   }
 

@@ -21,4 +21,8 @@ export class NgxEditorJs2Service {
   consumerSupportedBlocks: ConsumerSupportedBlock[] =
     inject(NGX_EDITORJS_OPTIONS, { optional: true })?.consumerSupportedBlocks ??
     [];
+
+  internalSupportedBlocks: ConsumerSupportedBlock[] = [
+    // ! START HERE!!!!!!!!!
+  ];
 }
