@@ -11,6 +11,7 @@ import { CleanPasteDataDirective } from '../../directives/clean-paste-data.direc
 
 @Component({
   selector: 'header-block',
+  host: { class: 'position-relative' },
   imports: [
     ReactiveFormsModule,
     ControlAccessorDirective,
@@ -21,24 +22,17 @@ import { CleanPasteDataDirective } from '../../directives/clean-paste-data.direc
   template: `
     <ng-container [formGroup]="formGroup()">
       <h1
-        toolFab
-        contentEditable
-        appControlAccessor
+        controlAccessor
         cleanPasteData
-        [autofocus]="autofocus()"
+        contentEditable
+        toolFab
         [actionCallback]="actionCallback"
         [blockOptionActions]="blockOptionActions()"
+        [autofocus]="autofocus()"
         [formControlName]="formControlName()"
       ></h1>
     </ng-container>
   `,
-  styles: [
-    `
-      :host {
-        position: relative;
-      }
-    `,
-  ],
 })
 export class HeaderBlockComponent implements BlockComponent {
   autofocus = input<boolean>(false);

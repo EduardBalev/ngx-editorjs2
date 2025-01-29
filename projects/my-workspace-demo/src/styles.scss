@@ -124,3 +124,7 @@ body {
     @include mat.elevation($i);
   }
 }
+
+.position-relative {
+  position: relative;
+}

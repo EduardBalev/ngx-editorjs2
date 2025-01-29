@@ -10,6 +10,7 @@ import { ToolFabDirective } from '../../directives/tool-fab.directive';
 
 @Component({
   selector: 'paragraph-block',
+  host: { class: 'position-relative' },
   imports: [
     ReactiveFormsModule,
     ControlAccessorDirective,
@@ -19,25 +20,19 @@ import { ToolFabDirective } from '../../directives/tool-fab.directive';
   template: `
     <ng-container [formGroup]="formGroup()">
       <p
-        toolFab
+        controlAccessor
         contentEditable
-        appControlAccessor
-        [autofocus]="true"
+        toolFab
         [actionCallback]="actionCallback"
+        [autofocus]="autofocus()"
         [blockOptionActions]="blockOptionActions()"
         [formControlName]="formControlName()"
       ></p>
     </ng-container>
   `,
-  styles: [
-    `
-      :host {
-        position: relative;
-      }
-    `,
-  ],
 })
 export class ParagraphBlockComponent implements BlockComponent {
+  autofocus = input<boolean>(false);
   formGroup = input.required<FormGroup>();
   formControlName = input.required<string>();
   blockOptionActions = input<BlockOptionAction[]>([

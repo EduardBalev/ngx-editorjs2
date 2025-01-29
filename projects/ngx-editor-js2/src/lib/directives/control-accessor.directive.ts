@@ -9,7 +9,7 @@ import {
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Directive({
-  selector: '[appControlAccessor]',
+  selector: '[controlAccessor]',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
