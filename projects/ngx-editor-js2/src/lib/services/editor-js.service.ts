@@ -10,6 +10,17 @@ import { BehaviorSubject, combineLatest, of, tap } from 'rxjs';
 
 const createUID = () => Math.random().toString(36).substring(7);
 
+export interface NgxEditorJsBlock {
+  blockId: string;
+  sortIndex: number;
+  componentInstanceName: string;
+  dataClean: string;
+  savedAction?: string;
+}
+interface NgxEditorJsBlockWithComponent extends NgxEditorJsBlock {
+  component: Type<BlockComponent>;
+}
+
 export interface BlockComponent {
   formControlName: InputSignal<string>;
   formGroup: InputSignal<FormGroup>;
@@ -45,32 +56,37 @@ export class EditorJsService {
   }
 
   addBlockComponent(
-    component: Type<BlockComponent>,
+    ngxEditorJsBlock: NgxEditorJsBlockWithComponent,
     controlName: string = createUID()
   ) {
     return combineLatest([
-      this.newFormGroupControl(controlName),
-      this.attachComponent(component, controlName),
+      this.newFormGroupControl(controlName, ngxEditorJsBlock?.dataClean),
+      this.attachComponent(ngxEditorJsBlock, controlName),
     ]).pipe(
       tap(([_formControl, _componentRef]) =>
-        this.blockComponents.next([...this.blockComponents.value, component])
+        this.blockComponents.next([
+          ...this.blockComponents.value,
+          ngxEditorJsBlock.component,
+        ])
       )
     );
   }
 
-  newFormGroupControl(uuid: string) {
-    return of(this.formBuilder.control('', [])).pipe(
+  newFormGroupControl(uuid: string, value?: unknown) {
+    return of(this.formBuilder.control(value, [])).pipe(
       tap((formControl) => this.formGroup.addControl(uuid, formControl))
     );
   }
 
-  attachComponent(component: Type<BlockComponent>, controlName: string) {
-    return of(
-      this.ngxEditor.createComponent(component)
-    ).pipe(
-      tap((componentRef) => {
+  attachComponent(
+    { component }: NgxEditorJsBlockWithComponent,
+    controlName: string
+  ) {
+    return of(controlName).pipe(
+      tap((_controlName) => {
+        const componentRef = this.ngxEditor.createComponent(component);
         componentRef.setInput('formGroup', this.formGroup);
-        componentRef.setInput('formControlName', controlName);
+        componentRef.setInput('formControlName', _controlName);
       })
     );
   }

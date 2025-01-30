@@ -26,6 +26,7 @@ import { CleanPasteDataDirective } from '../../directives/clean-paste-data.direc
         cleanPasteData
         contentEditable
         toolFab
+        [defaultValue]="formGroup().get(formControlName())?.value"
         [actionCallback]="actionCallback"
         [blockOptionActions]="blockOptionActions()"
         [autofocus]="autofocus()"

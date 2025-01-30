@@ -140,7 +140,7 @@ export class ToolbarComponent {
 
   addBlock(block: Type<BlockComponent>) {
     this.closeLists();
-    firstValueFrom(this.editorJsService.addBlockComponent(block));
+    // firstValueFrom(this.editorJsService.addBlockComponent( block));
   }
 
   closeLists() {

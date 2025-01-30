@@ -23,6 +23,7 @@ import { ToolFabDirective } from '../../directives/tool-fab.directive';
         controlAccessor
         contentEditable
         toolFab
+        [defaultValue]="formGroup().get(formControlName())?.value"
         [actionCallback]="actionCallback"
         [autofocus]="autofocus()"
         [blockOptionActions]="blockOptionActions()"
