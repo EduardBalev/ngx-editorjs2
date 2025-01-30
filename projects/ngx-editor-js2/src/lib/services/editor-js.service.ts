@@ -19,6 +19,7 @@ export interface NgxEditorJsBlock {
 }
 interface NgxEditorJsBlockWithComponent extends NgxEditorJsBlock {
   component: Type<BlockComponent>;
+  autofocus?: boolean;
 }
 
 export interface BlockComponent {
@@ -51,17 +52,28 @@ export class EditorJsService {
   blockComponents = new BehaviorSubject<Type<BlockComponent>[]>([]);
   blockComponents$ = this.blockComponents.asObservable();
 
+  // TODO - Handle this idiomatically
   setNgxEditor(ngxEditor: ViewContainerRef) {
     this.ngxEditor = ngxEditor;
   }
 
-  addBlockComponent(
-    ngxEditorJsBlock: NgxEditorJsBlockWithComponent,
-    controlName: string = createUID()
-  ) {
+  createNgxEditorJsBlockWithComponent(blockComponent: Type<BlockComponent>) {
+    return of<NgxEditorJsBlockWithComponent>({
+      blockId: createUID(),
+      sortIndex: 0,
+      componentInstanceName: blockComponent.name,
+      component: blockComponent,
+      // TODO - Force content-type for dataClean? JSON, HTML, etc.
+      // TODO - And maybe rename dataClean to just data?
+      dataClean: '',
+      autofocus: true,
+    });
+  }
+
+  addBlockComponent(ngxEditorJsBlock: NgxEditorJsBlockWithComponent) {
     return combineLatest([
-      this.newFormGroupControl(controlName, ngxEditorJsBlock?.dataClean),
-      this.attachComponent(ngxEditorJsBlock, controlName),
+      this.createFormGroupControl(ngxEditorJsBlock),
+      this.attachComponent(ngxEditorJsBlock),
     ]).pipe(
       tap(([_formControl, _componentRef]) =>
         this.blockComponents.next([
@@ -72,21 +84,26 @@ export class EditorJsService {
     );
   }
 
-  newFormGroupControl(uuid: string, value?: unknown) {
-    return of(this.formBuilder.control(value, [])).pipe(
-      tap((formControl) => this.formGroup.addControl(uuid, formControl))
+  createFormGroupControl({
+    blockId,
+    dataClean,
+  }: NgxEditorJsBlockWithComponent) {
+    return of(this.formBuilder.control(dataClean, [])).pipe(
+      tap((formControl) => this.formGroup.addControl(blockId, formControl))
     );
   }
 
-  attachComponent(
-    { component }: NgxEditorJsBlockWithComponent,
-    controlName: string
-  ) {
-    return of(controlName).pipe(
-      tap((_controlName) => {
+  attachComponent({
+    component,
+    blockId,
+    autofocus,
+  }: NgxEditorJsBlockWithComponent) {
+    return of(blockId).pipe(
+      tap((controlName) => {
         const componentRef = this.ngxEditor.createComponent(component);
         componentRef.setInput('formGroup', this.formGroup);
-        componentRef.setInput('formControlName', _controlName);
+        componentRef.setInput('formControlName', controlName);
+        componentRef.setInput('autofocus', autofocus);
       })
     );
   }

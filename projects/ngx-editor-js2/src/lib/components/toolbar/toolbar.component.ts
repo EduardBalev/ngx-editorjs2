@@ -1,4 +1,4 @@
-import { Component, inject, Input, input, output, Type } from '@angular/core';
+import { Component, inject, input, Type } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import {
@@ -118,7 +118,7 @@ export class ToolbarComponent {
   addBlockCallback =
     input.required<(block: Type<BlockComponent>) => Observable<unknown>>();
 
-  // Keeping it simple open close logic
+  // TODO - Refactor this to use Signals
   openBlocks = false;
   openBlocksOption = false;
 
@@ -139,8 +139,8 @@ export class ToolbarComponent {
   }
 
   addBlock(block: Type<BlockComponent>) {
-    this.closeLists();
-    // firstValueFrom(this.editorJsService.addBlockComponent( block));
+    this.closeLists()
+    firstValueFrom(this.addBlockCallback()(block));
   }
 
   closeLists() {

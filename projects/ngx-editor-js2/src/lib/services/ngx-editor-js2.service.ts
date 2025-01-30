@@ -84,7 +84,7 @@ export class NgxEditorJs2Service {
     mergeMap((blocks) =>
       combineLatest(
         blocks.map((block) =>
-          this.editorJsService.addBlockComponent(block, block.blockId)
+          this.editorJsService.addBlockComponent(block)
         )
       )
     )
