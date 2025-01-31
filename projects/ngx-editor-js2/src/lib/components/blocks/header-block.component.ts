@@ -35,7 +35,7 @@ import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interfac
 })
 export class HeaderBlockComponent implements BlockComponent {
   sortIndex = input<number>(0);
-  autofocus = input<boolean>(false);
+  autofocus = input<boolean>(true);
   formGroup = input.required<FormGroup>();
   formControlName = input.required<string>();
   blockOptionActions = input<BlockOptionAction[]>([

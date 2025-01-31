@@ -50,7 +50,7 @@ export class BlockMovementService {
 
         // Ensure the new index is within the valid range
         const totalComponents = ngxEditor.length;
-        newIndex = Math.max(0, Math.min(newIndex, totalComponents - 1));
+        newIndex = Math.max(0, Math.min(newIndex, totalComponents));
 
         // Only move if the index has changed
         if (newIndex !== currentIndex) {
