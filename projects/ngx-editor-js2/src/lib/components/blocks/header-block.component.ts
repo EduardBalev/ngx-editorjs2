@@ -31,11 +31,13 @@ import { CleanPasteDataDirective } from '../../directives/clean-paste-data.direc
         [blockOptionActions]="blockOptionActions()"
         [autofocus]="autofocus()"
         [formControlName]="formControlName()"
+        [componentContextPositionIndex]="sortIndex()"
       ></h1>
     </ng-container>
   `,
 })
 export class HeaderBlockComponent implements BlockComponent {
+  sortIndex = input<number>(0);
   autofocus = input<boolean>(false);
   formGroup = input.required<FormGroup>();
   formControlName = input.required<string>();

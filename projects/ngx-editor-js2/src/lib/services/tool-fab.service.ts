@@ -17,6 +17,7 @@ import {
 import { NgxEditorJs2Service } from './ngx-editor-js2.service';
 
 type ComponentContext = {
+  index: number;
   viewContainerRef: ViewContainerRef;
   blockOptionActions: BlockOptionAction[];
   actionCallback: (v: string) => void;
@@ -42,9 +43,10 @@ export class ToolFabService {
           : true
     ),
     map(({ componentContext, supportedBlocks }) => {
-      const { viewContainerRef, blockOptionActions, actionCallback } =
+      const { index, viewContainerRef, blockOptionActions, actionCallback } =
         componentContext!;
       const componentRef = viewContainerRef.createComponent(ToolbarComponent);
+      componentRef.setInput('componentContextPositionIndex', index + 1);
       componentRef.setInput('supportedBlocks', supportedBlocks);
       componentRef.setInput('blockOptionActions', blockOptionActions);
       componentRef.setInput('actionCallback', actionCallback);
@@ -53,10 +55,11 @@ export class ToolFabService {
     })
   );
 
-  addBlock(block: Type<BlockComponent>) {
-    return this.editorJsService.createNgxEditorJsBlockWithComponent(block).pipe(
-      // TODO - Then to add sort index based on the componentContext current position
-      switchMap((block) => this.editorJsService.addBlockComponent(block))
-    );
+  addBlock(block: Type<BlockComponent>, index: number) {
+    return this.editorJsService
+      .createNgxEditorJsBlockWithComponent(block, index)
+      .pipe(
+        switchMap((block) => this.editorJsService.addBlockComponent(block))
+      );
   }
 }

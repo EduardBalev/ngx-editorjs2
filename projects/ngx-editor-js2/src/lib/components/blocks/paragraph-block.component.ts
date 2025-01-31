@@ -28,11 +28,13 @@ import { ToolFabDirective } from '../../directives/tool-fab.directive';
         [autofocus]="autofocus()"
         [blockOptionActions]="blockOptionActions()"
         [formControlName]="formControlName()"
+        [componentContextPositionIndex]="sortIndex()"
       ></p>
     </ng-container>
   `,
 })
 export class ParagraphBlockComponent implements BlockComponent {
+  sortIndex = input<number>(0);
   autofocus = input<boolean>(false);
   formGroup = input.required<FormGroup>();
   formControlName = input.required<string>();

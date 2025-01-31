@@ -4,9 +4,10 @@ import {
   InputSignal,
   Type,
   ViewContainerRef,
+  WritableSignal,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { BehaviorSubject, combineLatest, of, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, from, of, tap } from 'rxjs';
 
 const createUID = () => Math.random().toString(36).substring(7);
 
@@ -46,6 +47,8 @@ export enum MovePositionActions {
 export class EditorJsService {
   formBuilder = inject(FormBuilder);
 
+  componentRefMap = new Map<object, unknown>();
+
   ngxEditor!: ViewContainerRef;
   formGroup = this.formBuilder.group({});
 
@@ -57,10 +60,13 @@ export class EditorJsService {
     this.ngxEditor = ngxEditor;
   }
 
-  createNgxEditorJsBlockWithComponent(blockComponent: Type<BlockComponent>) {
+  createNgxEditorJsBlockWithComponent(
+    blockComponent: Type<BlockComponent>,
+    componentContextPositionIndex: number
+  ) {
     return of<NgxEditorJsBlockWithComponent>({
       blockId: createUID(),
-      sortIndex: 0,
+      sortIndex: componentContextPositionIndex,
       componentInstanceName: blockComponent.name,
       component: blockComponent,
       // TODO - Force content-type for dataClean? JSON, HTML, etc.
@@ -71,9 +77,10 @@ export class EditorJsService {
   }
 
   addBlockComponent(ngxEditorJsBlock: NgxEditorJsBlockWithComponent) {
-    return combineLatest([
+    return forkJoin([
       this.createFormGroupControl(ngxEditorJsBlock),
       this.attachComponent(ngxEditorJsBlock),
+      this.updateComponentIndices(),
     ]).pipe(
       tap(([_formControl, _componentRef]) =>
         this.blockComponents.next([
@@ -97,14 +104,31 @@ export class EditorJsService {
     component,
     blockId,
     autofocus,
+    sortIndex: index,
   }: NgxEditorJsBlockWithComponent) {
     return of(blockId).pipe(
       tap((controlName) => {
-        const componentRef = this.ngxEditor.createComponent(component);
+        const componentRef = this.ngxEditor.createComponent(component, {
+          index,
+        });
+        componentRef.setInput('sortIndex', index);
         componentRef.setInput('formGroup', this.formGroup);
         componentRef.setInput('formControlName', controlName);
         componentRef.setInput('autofocus', autofocus);
+
+        this.componentRefMap.set(componentRef.instance, componentRef);
       })
+    );
+  }
+
+  updateComponentIndices() {
+    return from(this.componentRefMap.values()).pipe(
+      tap((componentRef: any) =>
+        componentRef.setInput(
+          'sortIndex',
+          this.ngxEditor.indexOf(componentRef.hostView)
+        )
+      )
     );
   }
 }

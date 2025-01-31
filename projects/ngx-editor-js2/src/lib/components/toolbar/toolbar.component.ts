@@ -113,10 +113,13 @@ export class ToolbarComponent {
   editorJsService = inject(EditorJsService);
 
   blockOptionActions = input<BlockOptionAction[]>();
+  componentContextPositionIndex = input.required<number>();
   supportedBlocks = input.required<SupportedBlock[]>();
   actionCallback = input.required<(action: string) => void>();
   addBlockCallback =
-    input.required<(block: Type<BlockComponent>) => Observable<unknown>>();
+    input.required<
+      (block: Type<BlockComponent>, index: number) => Observable<unknown>
+    >();
 
   // TODO - Refactor this to use Signals
   openBlocks = false;
@@ -139,8 +142,10 @@ export class ToolbarComponent {
   }
 
   addBlock(block: Type<BlockComponent>) {
-    this.closeLists()
-    firstValueFrom(this.addBlockCallback()(block));
+    this.closeLists();
+    firstValueFrom(
+      this.addBlockCallback()(block, this.componentContextPositionIndex())
+    );
   }
 
   closeLists() {
