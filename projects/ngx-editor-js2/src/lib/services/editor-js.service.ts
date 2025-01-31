@@ -1,10 +1,12 @@
 import { inject, Injectable, Type, ViewContainerRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { BehaviorSubject, forkJoin, from, of, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, of, tap } from 'rxjs';
 import {
   BlockComponent,
+  MovePositionActions,
   NgxEditorJsBlockWithComponent,
 } from '../ngx-editor-js2.interface';
+import { BlockMovementService } from './block-movement.service';
 
 const createUID = () => Math.random().toString(36).substring(7);
 @Injectable({
@@ -12,6 +14,7 @@ const createUID = () => Math.random().toString(36).substring(7);
 })
 export class EditorJsService {
   formBuilder = inject(FormBuilder);
+  blockMovementService = inject(BlockMovementService);
 
   componentRefMap = new Map<object, unknown>();
 
@@ -46,7 +49,7 @@ export class EditorJsService {
     return forkJoin([
       this.createFormGroupControl(ngxEditorJsBlock),
       this.attachComponent(ngxEditorJsBlock),
-      this.updateComponentIndices(),
+      this.blockMovementService.updateComponentIndices(this.ngxEditor),
     ]).pipe(
       tap(([_formControl, _componentRef]) =>
         this.blockComponents.next([
@@ -82,19 +85,18 @@ export class EditorJsService {
         componentRef.setInput('formControlName', controlName);
         componentRef.setInput('autofocus', autofocus);
 
-        this.componentRefMap.set(componentRef.instance, componentRef);
+        this.blockMovementService.componentRefMap.set(
+          componentRef.instance,
+          componentRef
+        );
       })
     );
   }
 
-  updateComponentIndices() {
-    return from(this.componentRefMap.values()).pipe(
-      tap((componentRef: any) =>
-        componentRef.setInput(
-          'sortIndex',
-          this.ngxEditor.indexOf(componentRef.hostView)
-        )
-      )
-    );
+  determineMovePositionAction(action: MovePositionActions, index: number) {
+    return forkJoin([
+      this.blockMovementService.moveBlockComponentPosition(this.ngxEditor, action, index),
+      this.blockMovementService.updateComponentIndices(this.ngxEditor),
+    ]);
   }
 }

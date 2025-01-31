@@ -4,13 +4,14 @@ import {
   combineLatest,
   distinctUntilChanged,
   filter,
+  lastValueFrom,
   map,
   switchMap,
 } from 'rxjs';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
 import { EditorJsService } from './editor-js.service';
 import { NgxEditorJs2Service } from './ngx-editor-js2.service';
-import { BlockOptionAction, BlockComponent } from '../ngx-editor-js2.interface';
+import { BlockOptionAction, BlockComponent, MovePositionActions } from '../ngx-editor-js2.interface';
 
 type ComponentContext = {
   index: number;
@@ -48,6 +49,7 @@ export class ToolFabService {
       componentRef.setInput('blockOptionActions', blockOptionActions);
       componentRef.setInput('actionCallback', actionCallback);
       componentRef.setInput('addBlockCallback', this.addBlock.bind(this));
+      componentRef.setInput('moveBlockPositionCallback', this.moveBlockPosition.bind(this));
       return componentRef;
     })
   );
@@ -58,5 +60,9 @@ export class ToolFabService {
       .pipe(
         switchMap((block) => this.editorJsService.addBlockComponent(block))
       );
+  }
+
+  moveBlockPosition(action: MovePositionActions, index: number) {
+    return lastValueFrom(this.editorJsService.determineMovePositionAction(action, index));
   }
 }

@@ -7,6 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   BlockComponent,
   BlockOptionAction,
+  MovePositionActions,
   SupportedBlock,
   TActionCallback,
 } from '../../ngx-editor-js2.interface';
@@ -115,6 +116,8 @@ export class ToolbarComponent {
   supportedBlocks = input.required<SupportedBlock[]>();
   actionCallback = input.required<(action: string) => void>();
   addBlockCallback = input.required<TActionCallback>();
+  moveBlockPositionCallback =
+    input.required<(action: MovePositionActions, index: number) => void>();
 
   // TODO - Refactor this to use Signals
   openBlocks = false;
@@ -128,11 +131,16 @@ export class ToolbarComponent {
     this.openBlocksOption = !this.openBlocksOption;
   }
 
-  moveBlockPosition(action: string) {
-    console.log('adjustBlockPosition', action);
+  moveBlockPosition(action: MovePositionActions) {
+    this.closeLists();
+    this.moveBlockPositionCallback()(
+      action,
+      this.componentContextPositionIndex()
+    );
   }
 
   handleAction(action: string) {
+    this.closeLists();
     this.actionCallback()(action);
   }
 
