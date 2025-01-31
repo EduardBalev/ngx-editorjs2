@@ -1,15 +1,15 @@
-import { Component, inject, input, Type } from '@angular/core';
+import { Component, input, Type } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component';
+import { ToolbarBlocksComponent } from './toolbar-blocks.component';
+import { firstValueFrom } from 'rxjs';
 import {
   BlockComponent,
   BlockOptionAction,
-  EditorJsService,
-} from '../../services/editor-js.service';
-import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component';
-import { ToolbarBlocksComponent } from './toolbar-blocks.component';
-import { SupportedBlock } from '../../services/ngx-editor-js2.service';
-import { firstValueFrom, Observable } from 'rxjs';
+  SupportedBlock,
+  TActionCallback,
+} from '../../ngx-editor-js2.interface';
 
 @Component({
   selector: 'toolbar',
@@ -110,16 +110,11 @@ import { firstValueFrom, Observable } from 'rxjs';
   ],
 })
 export class ToolbarComponent {
-  editorJsService = inject(EditorJsService);
-
   blockOptionActions = input<BlockOptionAction[]>();
   componentContextPositionIndex = input.required<number>();
   supportedBlocks = input.required<SupportedBlock[]>();
   actionCallback = input.required<(action: string) => void>();
-  addBlockCallback =
-    input.required<
-      (block: Type<BlockComponent>, index: number) => Observable<unknown>
-    >();
+  addBlockCallback = input.required<TActionCallback>();
 
   // TODO - Refactor this to use Signals
   openBlocks = false;

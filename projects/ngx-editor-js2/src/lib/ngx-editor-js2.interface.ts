@@ -1,0 +1,51 @@
+import { InjectionToken, InputSignal, Type } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { Observable } from "rxjs";
+
+export const NGX_EDITORJS_OPTIONS = new InjectionToken<NgxEditorjsOptions>(
+  'NGX_EDITORJS_OPTIONS'
+);
+
+export interface NgxEditorjsOptions {
+  consumerSupportedBlocks?: SupportedBlock[];
+}
+export interface SupportedBlock {
+  name: string;
+  componentInstanceName: string;
+  component: Type<BlockComponent>;
+}
+
+export interface NgxEditorJsBlock {
+  blockId: string;
+  sortIndex: number;
+  componentInstanceName: string;
+  dataClean: string;
+  savedAction?: string;
+}
+export interface NgxEditorJsBlockWithComponent extends NgxEditorJsBlock {
+  component: Type<BlockComponent>;
+  autofocus?: boolean;
+}
+
+export interface BlockComponent {
+  formControlName: InputSignal<string>;
+  formGroup: InputSignal<FormGroup>;
+  blockOptionActions: InputSignal<BlockOptionAction[]>;
+}
+
+export interface BlockOptionAction {
+  action: string;
+  icon?: string;
+  text?: string;
+}
+
+export enum MovePositionActions {
+  UP = 'UP',
+  DOWN = 'DOWN',
+  DELETE = 'DELETE',
+}
+
+export type TActionCallback = (
+  block: Type<BlockComponent>,
+  index: number
+) => Observable<unknown>;

@@ -1,46 +1,12 @@
-import {
-  inject,
-  Injectable,
-  InputSignal,
-  Type,
-  ViewContainerRef,
-  WritableSignal,
-} from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { inject, Injectable, Type, ViewContainerRef } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { BehaviorSubject, forkJoin, from, of, tap } from 'rxjs';
+import {
+  BlockComponent,
+  NgxEditorJsBlockWithComponent,
+} from '../ngx-editor-js2.interface';
 
 const createUID = () => Math.random().toString(36).substring(7);
-
-export interface NgxEditorJsBlock {
-  blockId: string;
-  sortIndex: number;
-  componentInstanceName: string;
-  dataClean: string;
-  savedAction?: string;
-}
-interface NgxEditorJsBlockWithComponent extends NgxEditorJsBlock {
-  component: Type<BlockComponent>;
-  autofocus?: boolean;
-}
-
-export interface BlockComponent {
-  formControlName: InputSignal<string>;
-  formGroup: InputSignal<FormGroup>;
-  blockOptionActions: InputSignal<BlockOptionAction[]>;
-}
-
-export interface BlockOptionAction {
-  action: string;
-  icon?: string;
-  text?: string;
-}
-
-export enum MovePositionActions {
-  UP = 'UP',
-  DOWN = 'DOWN',
-  DELETE = 'DELETE',
-}
-
 @Injectable({
   providedIn: 'root',
 })

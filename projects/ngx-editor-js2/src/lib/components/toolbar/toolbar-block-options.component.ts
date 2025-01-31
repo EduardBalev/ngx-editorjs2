@@ -1,10 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import {
-  MovePositionActions,
-  BlockOptionAction,
-} from '../../services/editor-js.service';
 import { MatIcon } from '@angular/material/icon';
 import { MatRipple } from '@angular/material/core';
+import {
+  BlockOptionAction,
+  MovePositionActions,
+} from '../../ngx-editor-js2.interface';
 
 @Component({
   selector: 'toolbar-block-options',

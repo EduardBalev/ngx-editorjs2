@@ -4,4 +4,4 @@
 
 export * from './lib/services/ngx-editor-js2.service';
 export * from './lib/ngx-editor-js2.component';
-export type { NgxEditorJsBlock } from './lib/services/editor-js.service';
+export type { NgxEditorJsBlock } from './lib/ngx-editor-js2.interface';

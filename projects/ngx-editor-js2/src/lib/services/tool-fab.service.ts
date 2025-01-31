@@ -6,15 +6,11 @@ import {
   filter,
   map,
   switchMap,
-  tap,
 } from 'rxjs';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
-import {
-  BlockComponent,
-  BlockOptionAction,
-  EditorJsService,
-} from './editor-js.service';
+import { EditorJsService } from './editor-js.service';
 import { NgxEditorJs2Service } from './ngx-editor-js2.service';
+import { BlockOptionAction, BlockComponent } from '../ngx-editor-js2.interface';
 
 type ComponentContext = {
   index: number;
@@ -45,6 +41,7 @@ export class ToolFabService {
     map(({ componentContext, supportedBlocks }) => {
       const { index, viewContainerRef, blockOptionActions, actionCallback } =
         componentContext!;
+      // TODO We will need to create a ToolbarBottomRailComponent to handle the mobile view
       const componentRef = viewContainerRef.createComponent(ToolbarComponent);
       componentRef.setInput('componentContextPositionIndex', index + 1);
       componentRef.setInput('supportedBlocks', supportedBlocks);

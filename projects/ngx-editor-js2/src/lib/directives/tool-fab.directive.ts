@@ -8,9 +8,9 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { ToolFabService } from '../services/tool-fab.service';
-import { BlockOptionAction } from '../services/editor-js.service';
 import { Observable } from 'rxjs';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
+import { BlockOptionAction } from '../ngx-editor-js2.interface';
 
 export type ToolbarComponentRef = Observable<ComponentRef<ToolbarComponent>>;
 

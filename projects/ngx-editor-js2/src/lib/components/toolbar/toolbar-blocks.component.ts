@@ -7,8 +7,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatList, MatListItem } from '@angular/material/list';
 import { combineLatest, map, startWith } from 'rxjs';
-import { SupportedBlock } from '../../services/ngx-editor-js2.service';
-import { BlockComponent } from '../../services/editor-js.service';
+import { BlockComponent, SupportedBlock } from '../../ngx-editor-js2.interface';
 
 @Component({
   selector: 'toolbar-blocks',

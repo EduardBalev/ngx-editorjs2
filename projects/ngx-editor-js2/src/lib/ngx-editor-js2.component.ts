@@ -1,10 +1,10 @@
 import { Component, inject, input } from '@angular/core';
 import { EditorJsComponent } from './components/editor-js.component';
-import { NgxEditorJsBlock } from './services/editor-js.service';
 import { AsyncPipe } from '@angular/common';
 import { combineLatest } from 'rxjs';
 import { ToolFabService } from './services/tool-fab.service';
 import { NgxEditorJs2Service } from './services/ngx-editor-js2.service';
+import { NgxEditorJsBlock } from './ngx-editor-js2.interface';
 
 @Component({
   selector: 'ngx-editor-js2',

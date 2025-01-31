@@ -1,12 +1,9 @@
 import { Component, input } from '@angular/core';
-import {
-  BlockComponent,
-  BlockOptionAction,
-} from '../../services/editor-js.service';
 import { ControlAccessorDirective } from '../../directives/control-accessor.directive';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { ToolFabDirective } from '../../directives/tool-fab.directive';
+import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interface';
 
 @Component({
   selector: 'paragraph-block',

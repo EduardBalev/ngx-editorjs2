@@ -6,11 +6,9 @@ import {
   viewChild,
   ViewContainerRef,
 } from '@angular/core';
-import {
-  EditorJsService,
-  NgxEditorJsBlock,
-} from '../services/editor-js.service';
+import { EditorJsService } from '../services/editor-js.service';
 import { NgxEditorJs2Service } from '../services/ngx-editor-js2.service';
+import { NgxEditorJsBlock } from '../ngx-editor-js2.interface';
 
 @Component({
   selector: 'editor-js',
@@ -19,7 +17,7 @@ import { NgxEditorJs2Service } from '../services/ngx-editor-js2.service';
 export class EditorJsComponent {
   editorJsService = inject(EditorJsService);
   ngxEditorJs2Service = inject(NgxEditorJs2Service);
-  
+
   bootstrapEditorJs = input();
   blocks = input.required<NgxEditorJsBlock[]>();
   ngxEditor = viewChild.required('ngxEditor', { read: ViewContainerRef });

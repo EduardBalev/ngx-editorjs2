@@ -1,4 +1,4 @@
-import { inject, Injectable, InjectionToken, Type } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HeaderBlockComponent } from '../components/blocks/header-block.component';
 import { ParagraphBlockComponent } from '../components/blocks/paragraph-block.component';
 import {
@@ -10,24 +10,12 @@ import {
   of,
   switchMap,
 } from 'rxjs';
+import { EditorJsService } from './editor-js.service';
 import {
-  BlockComponent,
-  EditorJsService,
+  NGX_EDITORJS_OPTIONS,
   NgxEditorJsBlock,
-} from './editor-js.service';
-
-export const NGX_EDITORJS_OPTIONS = new InjectionToken<NgxEditorjsOptions>(
-  'NGX_EDITORJS_OPTIONS'
-);
-
-export interface NgxEditorjsOptions {
-  consumerSupportedBlocks?: SupportedBlock[];
-}
-export interface SupportedBlock {
-  name: string;
-  componentInstanceName: string;
-  component: Type<BlockComponent>;
-}
+  SupportedBlock,
+} from '../ngx-editor-js2.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -83,9 +71,7 @@ export class NgxEditorJs2Service {
     ),
     mergeMap((blocks) =>
       combineLatest(
-        blocks.map((block) =>
-          this.editorJsService.addBlockComponent(block)
-        )
+        blocks.map((block) => this.editorJsService.addBlockComponent(block))
       )
     )
   );
