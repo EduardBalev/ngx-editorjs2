@@ -1,9 +1,10 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { ControlAccessorDirective } from '../../directives/control-accessor.directive';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { ToolFabDirective } from '../../directives/tool-fab.directive';
 import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interface';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'paragraph-block',
@@ -13,6 +14,7 @@ import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interfac
     ControlAccessorDirective,
     AutofocusDirective,
     ToolFabDirective,
+    NgClass
   ],
   template: `
     <ng-container [formGroup]="formGroup()">
@@ -20,8 +22,9 @@ import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interfac
         controlAccessor
         contentEditable
         toolFab
+        [ngClass]="className()"
         [defaultValue]="formGroup().get(formControlName())?.value"
-        [actionCallback]="actionCallback"
+        [actionCallback]="actionCallback.bind(this)"
         [autofocus]="autofocus()"
         [blockOptionActions]="blockOptionActions()"
         [formControlName]="formControlName()"
@@ -29,6 +32,22 @@ import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interfac
       ></p>
     </ng-container>
   `,
+  styles: [
+    `
+      :host {
+        .small {
+          font: var(--mat-sys-body-small)
+        }
+        .medium {
+          font: var(--mat-sys-body-medium)
+          
+        }
+        .large {
+          font: var(--mat-sys-body-large)
+        }
+      }
+    `,
+  ],
 })
 export class ParagraphBlockComponent implements BlockComponent {
   sortIndex = input<number>(0);
@@ -41,7 +60,8 @@ export class ParagraphBlockComponent implements BlockComponent {
     { action: 'large', icon: 'density_large' },
   ]);
 
-  actionCallback() {
-    console.log('In da Component!');
+  className = signal<string>('medium');
+  actionCallback(action: string) {
+    this.className.update(() => action);
   }
 }

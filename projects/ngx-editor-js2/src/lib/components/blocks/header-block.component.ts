@@ -1,10 +1,14 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { ControlAccessorDirective } from '../../directives/control-accessor.directive';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { ToolFabDirective } from '../../directives/tool-fab.directive';
 import { CleanPasteDataDirective } from '../../directives/clean-paste-data.directive';
-import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interface';
+import {
+  BlockComponent,
+  BlockOptionAction,
+} from '../../ngx-editor-js2.interface';
+import { NgSwitch, NgSwitchCase } from '@angular/common';
 
 @Component({
   selector: 'header-block',
@@ -15,21 +19,92 @@ import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interfac
     AutofocusDirective,
     ToolFabDirective,
     CleanPasteDataDirective,
+    NgSwitch,
+    NgSwitchCase,
   ],
+  // TODO: Make this dynamic instead of repeating the same code for each header tag
   template: `
     <ng-container [formGroup]="formGroup()">
-      <h1
-        controlAccessor
-        cleanPasteData
-        contentEditable
-        toolFab
-        [defaultValue]="formGroup().get(formControlName())?.value"
-        [actionCallback]="actionCallback"
-        [blockOptionActions]="blockOptionActions()"
-        [autofocus]="autofocus()"
-        [formControlName]="formControlName()"
-        [componentContextPositionIndex]="sortIndex()"
-      ></h1>
+      <ng-container [ngSwitch]="selectedHeaderTag()">
+        <h1
+          *ngSwitchCase="'h1'"
+          controlAccessor
+          cleanPasteData
+          contentEditable
+          toolFab
+          [defaultValue]="formGroup().get(formControlName())?.value"
+          [actionCallback]="actionCallback.bind(this)"
+          [blockOptionActions]="blockOptionActions()"
+          [autofocus]="autofocus()"
+          [formControlName]="formControlName()"
+          [componentContextPositionIndex]="sortIndex()"
+        ></h1>
+        <h2
+          *ngSwitchCase="'h2'"
+          controlAccessor
+          cleanPasteData
+          contentEditable
+          toolFab
+          [defaultValue]="formGroup().get(formControlName())?.value"
+          [actionCallback]="actionCallback.bind(this)"
+          [blockOptionActions]="blockOptionActions()"
+          [autofocus]="autofocus()"
+          [formControlName]="formControlName()"
+          [componentContextPositionIndex]="sortIndex()"
+        ></h2>
+        <h3
+          *ngSwitchCase="'h3'"
+          controlAccessor
+          cleanPasteData
+          contentEditable
+          toolFab
+          [defaultValue]="formGroup().get(formControlName())?.value"
+          [actionCallback]="actionCallback.bind(this)"
+          [blockOptionActions]="blockOptionActions()"
+          [autofocus]="autofocus()"
+          [formControlName]="formControlName()"
+          [componentContextPositionIndex]="sortIndex()"
+        ></h3>
+        <h4
+          *ngSwitchCase="'h4'"
+          controlAccessor
+          cleanPasteData
+          contentEditable
+          toolFab
+          [defaultValue]="formGroup().get(formControlName())?.value"
+          [actionCallback]="actionCallback.bind(this)"
+          [blockOptionActions]="blockOptionActions()"
+          [autofocus]="autofocus()"
+          [formControlName]="formControlName()"
+          [componentContextPositionIndex]="sortIndex()"
+        ></h4>
+        <h5
+          *ngSwitchCase="'h5'"
+          controlAccessor
+          cleanPasteData
+          contentEditable
+          toolFab
+          [defaultValue]="formGroup().get(formControlName())?.value"
+          [actionCallback]="actionCallback.bind(this)"
+          [blockOptionActions]="blockOptionActions()"
+          [autofocus]="autofocus()"
+          [formControlName]="formControlName()"
+          [componentContextPositionIndex]="sortIndex()"
+        ></h5>
+        <h6
+          *ngSwitchCase="'h6'"
+          controlAccessor
+          cleanPasteData
+          contentEditable
+          toolFab
+          [defaultValue]="formGroup().get(formControlName())?.value"
+          [actionCallback]="actionCallback.bind(this)"
+          [blockOptionActions]="blockOptionActions()"
+          [autofocus]="autofocus()"
+          [formControlName]="formControlName()"
+          [componentContextPositionIndex]="sortIndex()"
+        ></h6>
+      </ng-container>
     </ng-container>
   `,
 })
@@ -47,7 +122,9 @@ export class HeaderBlockComponent implements BlockComponent {
     { action: 'h6', text: 'H6' },
   ]);
 
-  actionCallback() {
-    console.log('In da Component!');
+  selectedHeaderTag = signal<string>('h1');
+
+  actionCallback(selectedAction: string) {
+    this.selectedHeaderTag.set(selectedAction);
   }
 }

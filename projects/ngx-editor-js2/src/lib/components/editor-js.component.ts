@@ -13,6 +13,13 @@ import { NgxEditorJsBlock } from '../ngx-editor-js2.interface';
 @Component({
   selector: 'editor-js',
   template: ` <ng-container #ngxEditor></ng-container> `,
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
 })
 export class EditorJsComponent {
   editorJsService = inject(EditorJsService);
