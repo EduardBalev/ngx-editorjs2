@@ -45,7 +45,12 @@ export enum MovePositionActions {
   DELETE = 'DELETE',
 }
 
-export type TActionCallback = (
+export type TAddBlockCallback= (
   block: Type<BlockComponent>,
+  index: number
+) => Observable<unknown>;
+
+export type TMoveBlockPositionCallback= (
+  action: MovePositionActions,
   index: number
 ) => Observable<unknown>;

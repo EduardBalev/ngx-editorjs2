@@ -24,7 +24,7 @@ import { NgClass } from '@angular/common';
         toolFab
         [ngClass]="className()"
         [defaultValue]="formGroup().get(formControlName())?.value"
-        [actionCallback]="actionCallback.bind(this)"
+        [actionCallback]="actionCallbackBind"
         [autofocus]="autofocus()"
         [blockOptionActions]="blockOptionActions()"
         [formControlName]="formControlName()"
@@ -61,6 +61,8 @@ export class ParagraphBlockComponent implements BlockComponent {
   ]);
 
   className = signal<string>('medium');
+  actionCallbackBind = this.actionCallback.bind(this)
+
   actionCallback(action: string) {
     this.className.update(() => action);
   }

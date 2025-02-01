@@ -33,7 +33,7 @@ import { NgSwitch, NgSwitchCase } from '@angular/common';
           contentEditable
           toolFab
           [defaultValue]="formGroup().get(formControlName())?.value"
-          [actionCallback]="actionCallback.bind(this)"
+          [actionCallback]="actionCallbackBind"
           [blockOptionActions]="blockOptionActions()"
           [autofocus]="autofocus()"
           [formControlName]="formControlName()"
@@ -46,7 +46,7 @@ import { NgSwitch, NgSwitchCase } from '@angular/common';
           contentEditable
           toolFab
           [defaultValue]="formGroup().get(formControlName())?.value"
-          [actionCallback]="actionCallback.bind(this)"
+          [actionCallback]="actionCallbackBind"
           [blockOptionActions]="blockOptionActions()"
           [autofocus]="autofocus()"
           [formControlName]="formControlName()"
@@ -59,7 +59,7 @@ import { NgSwitch, NgSwitchCase } from '@angular/common';
           contentEditable
           toolFab
           [defaultValue]="formGroup().get(formControlName())?.value"
-          [actionCallback]="actionCallback.bind(this)"
+          [actionCallback]="actionCallbackBind"
           [blockOptionActions]="blockOptionActions()"
           [autofocus]="autofocus()"
           [formControlName]="formControlName()"
@@ -72,7 +72,7 @@ import { NgSwitch, NgSwitchCase } from '@angular/common';
           contentEditable
           toolFab
           [defaultValue]="formGroup().get(formControlName())?.value"
-          [actionCallback]="actionCallback.bind(this)"
+          [actionCallback]="actionCallbackBind"
           [blockOptionActions]="blockOptionActions()"
           [autofocus]="autofocus()"
           [formControlName]="formControlName()"
@@ -85,7 +85,7 @@ import { NgSwitch, NgSwitchCase } from '@angular/common';
           contentEditable
           toolFab
           [defaultValue]="formGroup().get(formControlName())?.value"
-          [actionCallback]="actionCallback.bind(this)"
+          [actionCallback]="actionCallbackBind"
           [blockOptionActions]="blockOptionActions()"
           [autofocus]="autofocus()"
           [formControlName]="formControlName()"
@@ -98,7 +98,7 @@ import { NgSwitch, NgSwitchCase } from '@angular/common';
           contentEditable
           toolFab
           [defaultValue]="formGroup().get(formControlName())?.value"
-          [actionCallback]="actionCallback.bind(this)"
+          [actionCallback]="actionCallbackBind"
           [blockOptionActions]="blockOptionActions()"
           [autofocus]="autofocus()"
           [formControlName]="formControlName()"
@@ -123,6 +123,7 @@ export class HeaderBlockComponent implements BlockComponent {
   ]);
 
   selectedHeaderTag = signal<string>('h1');
+  actionCallbackBind = this.actionCallback.bind(this)
 
   actionCallback(selectedAction: string) {
     this.selectedHeaderTag.set(selectedAction);
