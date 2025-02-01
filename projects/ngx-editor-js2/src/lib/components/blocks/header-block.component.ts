@@ -2,7 +2,7 @@ import { Component, input, signal } from '@angular/core';
 import { ControlAccessorDirective } from '../../directives/control-accessor.directive';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
-import { ToolFabDirective } from '../../directives/tool-fab.directive';
+import { ToolbarFabDirective } from '../../directives/toolbar-fab.directive';
 import { CleanPasteDataDirective } from '../../directives/clean-paste-data.directive';
 import {
   BlockComponent,
@@ -19,7 +19,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     ReactiveFormsModule,
     ControlAccessorDirective,
     AutofocusDirective,
-    ToolFabDirective,
+    ToolbarFabDirective,
     CleanPasteDataDirective,
     NgSwitch,
     NgSwitchCase,
@@ -52,7 +52,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
         controlAccessor
         cleanPasteData
         contentEditable
-        toolFab
+        toolbarFab
         [defaultValue]="formGroup().get(formControlName())?.value"
         [actionCallback]="actionCallbackBind"
         [blockOptionActions]="blockOptionActions()"

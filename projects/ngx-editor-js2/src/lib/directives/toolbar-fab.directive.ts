@@ -15,9 +15,9 @@ import { BlockOptionAction } from '../ngx-editor-js2.interface';
 export type ToolbarComponentRef = Observable<ComponentRef<ToolbarComponent>>;
 
 @Directive({
-  selector: '[toolFab]',
+  selector: '[toolbarFab]',
 })
-export class ToolFabDirective {
+export class ToolbarFabDirective {
   toolFabService = inject(ToolFabService);
   viewContainerRef = inject(ViewContainerRef);
   
