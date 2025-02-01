@@ -15,7 +15,7 @@ export const TEST_DATA: NgxEditorJsBlock[] = [
     sortIndex: 1,
     componentInstanceName: 'ParagraphBlockComponent',
     dataClean:
-      'Evaluation of a template expression should have no visible side effects. Use the syntax for template expressions to help avoid side effects. In general, the correct syntax prevents you from assigning a value to anything in a property binding expression. The syntax also prevents you from using increment and decrement operators.',
+      'Skips the very first call to startViewTransition. This can be useful for disabling the animation during the applications initial loading phase.',
   },
   {
     blockId: 'bu23hwyltss',
