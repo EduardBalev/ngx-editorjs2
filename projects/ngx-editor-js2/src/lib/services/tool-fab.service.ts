@@ -11,7 +11,11 @@ import {
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
 import { EditorJsService } from './editor-js.service';
 import { NgxEditorJs2Service } from './ngx-editor-js2.service';
-import { BlockOptionAction, BlockComponent, MovePositionActions } from '../ngx-editor-js2.interface';
+import {
+  BlockOptionAction,
+  BlockComponent,
+  MovePositionActions,
+} from '../ngx-editor-js2.interface';
 
 type ComponentContext = {
   index: number;
@@ -35,7 +39,7 @@ export class ToolFabService {
     filter(({ componentContext }) => componentContext !== null),
     distinctUntilChanged(
       ({ componentContext: previous }, { componentContext: current }) =>
-        previous!.viewContainerRef !== current!.viewContainerRef
+        previous!.index !== current!.index
           ? (previous!.viewContainerRef.clear(), false)
           : true
     ),
@@ -49,7 +53,10 @@ export class ToolFabService {
       componentRef.setInput('blockOptionActions', blockOptionActions);
       componentRef.setInput('actionCallback', actionCallback);
       componentRef.setInput('addBlockCallback', this.addBlock.bind(this));
-      componentRef.setInput('moveBlockPositionCallback', this.moveBlockPosition.bind(this));
+      componentRef.setInput(
+        'moveBlockPositionCallback',
+        this.movePositionAction.bind(this)
+      );
       return componentRef;
     })
   );
@@ -62,7 +69,9 @@ export class ToolFabService {
       );
   }
 
-  moveBlockPosition(action: MovePositionActions, index: number) {
-    return lastValueFrom(this.editorJsService.determineMovePositionAction(action, index));
+  movePositionAction(action: MovePositionActions, index: number) {
+    return lastValueFrom(
+      this.editorJsService.determineMovePositionAction(action, index)
+    );
   }
 }

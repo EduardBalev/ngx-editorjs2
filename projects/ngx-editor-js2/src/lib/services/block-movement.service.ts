@@ -1,10 +1,5 @@
-import {
-  ComponentRef,
-  Injectable,
-  Type,
-  ViewContainerRef,
-} from '@angular/core';
-import { from, of, tap } from 'rxjs';
+import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
+import { defaultIfEmpty, filter, from, map, of, tap } from 'rxjs';
 import {
   BlockComponent,
   MovePositionActions,
@@ -32,32 +27,36 @@ export class BlockMovementService {
     action: MovePositionActions,
     index: number
   ) {
-    // Need to pass sortIndex check aganist the componentRefMap
-    return of(action).pipe(
-      tap((moveAction) => {
-        const componentRefs = Array.from(this.componentRefMap.values());
-        const componentRef = componentRefs.find(
-          (componentRef) => ngxEditor.indexOf(componentRef.hostView) === index - 1
-        );
-
-        if (!componentRef) return;
-
-        const currentIndex = ngxEditor.indexOf(componentRef.hostView);
-        let newIndex =
-          moveAction === MovePositionActions.UP
-            ? currentIndex - 1
-            : currentIndex + 1;
-
-        // Ensure the new index is within the valid range
-        const totalComponents = ngxEditor.length;
-        newIndex = Math.max(0, Math.min(newIndex, totalComponents));
-
-        // Only move if the index has changed
-        if (newIndex !== currentIndex) {
-          ngxEditor.move(componentRef.hostView, newIndex);
-          componentRef.setInput('sortIndex', newIndex);
-        }
-      })
+    return of(Array.from(this.componentRefMap.values())).pipe(
+      map((componentRefs) =>
+        componentRefs.find(
+          (componentRef) =>
+            ngxEditor.indexOf(componentRef.hostView) === index - 1
+        )
+      ),
+      filter((componentRef) => !!componentRef),
+      map((componentRef) => ({
+        componentRef,
+        totalComponents: ngxEditor.length - 1,
+        currentIndex: ngxEditor.indexOf(componentRef.hostView),
+        newIndex: (index: number) =>
+          action === MovePositionActions.UP ? index - 1 : index + 1,
+      })),
+      map(({ componentRef, totalComponents, currentIndex, newIndex }) => ({
+        componentRef,
+        currentIndex,
+        newIndex: Math.max(
+          0,
+          Math.min(newIndex(currentIndex), totalComponents)
+        ),
+      })),
+      filter(({ currentIndex, newIndex }) => currentIndex !== newIndex),
+      tap(({ componentRef, newIndex }) => {
+        ngxEditor.move(componentRef.hostView, newIndex);
+        componentRef.setInput('sortIndex', newIndex);
+        componentRef.setInput('autofocus', true);
+      }),
+      defaultIfEmpty({ componentRef: null, currentIndex: -1, newIndex: -1 }),
     );
   }
 }
