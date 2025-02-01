@@ -3,18 +3,23 @@ import { ControlAccessorDirective } from '../../directives/control-accessor.dire
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { ToolFabDirective } from '../../directives/tool-fab.directive';
-import { BlockComponent, BlockOptionAction } from '../../ngx-editor-js2.interface';
+import {
+  BlockComponent,
+  BlockOptionAction,
+} from '../../ngx-editor-js2.interface';
 import { NgClass } from '@angular/common';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'paragraph-block',
-  host: { class: 'position-relative' },
+  host: { class: 'position-relative block cdk-drag-animating' },
+  hostDirectives: [CdkDrag],
   imports: [
     ReactiveFormsModule,
     ControlAccessorDirective,
     AutofocusDirective,
     ToolFabDirective,
-    NgClass
+    NgClass,
   ],
   template: `
     <ng-container [formGroup]="formGroup()">
@@ -36,14 +41,13 @@ import { NgClass } from '@angular/common';
     `
       :host {
         .small {
-          font: var(--mat-sys-body-small)
+          font: var(--mat-sys-body-small);
         }
         .medium {
-          font: var(--mat-sys-body-medium)
-          
+          font: var(--mat-sys-body-medium);
         }
         .large {
-          font: var(--mat-sys-body-large)
+          font: var(--mat-sys-body-large);
         }
       }
     `,
@@ -61,7 +65,7 @@ export class ParagraphBlockComponent implements BlockComponent {
   ]);
 
   className = signal<string>('medium');
-  actionCallbackBind = this.actionCallback.bind(this)
+  actionCallbackBind = this.actionCallback.bind(this);
 
   actionCallback(action: string) {
     this.className.update(() => action);

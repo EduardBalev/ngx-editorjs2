@@ -1,6 +1,15 @@
 import { inject, Injectable, Type, ViewContainerRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { BehaviorSubject, forkJoin, iif, of, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  defaultIfEmpty,
+  filter,
+  forkJoin,
+  iif,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
 import {
   BlockComponent,
   MovePositionActions,
@@ -103,6 +112,19 @@ export class EditorJsService {
       switchMap(() =>
         this.blockMovementService.updateComponentIndices(this.ngxEditor)
       )
+    );
+  }
+
+  moveBlockComponentPosition(previousIndex: number, currentIndex: number) {
+    return of(this.ngxEditor.get(previousIndex)).pipe(
+      filter((viewRef) => !!viewRef),
+      tap((viewRef) => {
+        this.ngxEditor.move(viewRef, currentIndex);
+      }),
+      switchMap(() =>
+        this.blockMovementService.updateComponentIndices(this.ngxEditor)
+      ),
+      defaultIfEmpty(false)
     );
   }
 }

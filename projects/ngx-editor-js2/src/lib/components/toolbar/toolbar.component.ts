@@ -1,5 +1,6 @@
 import { Component, input, signal, Type } from '@angular/core';
 import { MatRipple } from '@angular/material/core';
+import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { ToolbarBlockOptionsComponent } from './toolbar-block-options.component';
 import { ToolbarBlocksComponent } from './toolbar-blocks.component';
@@ -16,6 +17,7 @@ import {
 @Component({
   selector: 'toolbar',
   imports: [
+    CdkDragHandle,
     MatRipple,
     OverlayModule,
     ToolbarBlockOptionsComponent,
@@ -34,8 +36,9 @@ import {
       </div>
       <div
         class="toolbar-buttons mat-elevation-z4"
-        cdkOverlayOrigin
         #blockOptionListTigger="cdkOverlayOrigin"
+        cdkDragHandle
+        cdkOverlayOrigin
         matRipple
         (click)="openBlockOptionList()"
       >
@@ -80,9 +83,6 @@ import {
   styles: [
     `
       :host {
-        position: absolute;
-        margin-left: -80px;
-        top: 0;
         .toolbar-buttons-container {
           position: relative;
           display: flex;
@@ -106,6 +106,13 @@ import {
           &:focus {
             background: var(--mat-sys-surface-bright);
           }
+        }
+      }
+      @media (min-width: 768px) {
+        :host {
+          position: absolute;
+          margin-left: -80px;
+          top: 0;
         }
       }
     `,

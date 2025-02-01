@@ -128,3 +128,31 @@ body {
 .position-relative {
   position: relative;
 }
+.block {
+  display: block;
+}
+
+
+// TODO Clean this shit up
+.cdk-drag-preview {
+  color: var(--mat-sys-on-secondary-container);
+  background-color: var(--mat-sys-secondary-container);
+  border-radius: 8px;
+  box-sizing: border-box;
+  overflow: visible;
+  box-shadow: var(--mat-sys-level4);
+
+  & *:not(toolbar) {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+// TODO END Clean this shit up

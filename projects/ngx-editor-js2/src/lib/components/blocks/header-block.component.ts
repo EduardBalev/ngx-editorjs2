@@ -9,10 +9,12 @@ import {
   BlockOptionAction,
 } from '../../ngx-editor-js2.interface';
 import { NgSwitch, NgSwitchCase } from '@angular/common';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'header-block',
-  host: { class: 'position-relative' },
+  host: { class: 'position-relative block cdk-drag-animating' },
+  hostDirectives: [CdkDrag],
   imports: [
     ReactiveFormsModule,
     ControlAccessorDirective,
