@@ -1,6 +1,6 @@
 import { inject, Injectable, Type, ViewContainerRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { BehaviorSubject, forkJoin, of, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, iif, of, switchMap, tap } from 'rxjs';
 import {
   BlockComponent,
   MovePositionActions,
@@ -85,18 +85,24 @@ export class EditorJsService {
         componentRef.setInput('formControlName', controlName);
         componentRef.setInput('autofocus', autofocus);
 
-        this.blockMovementService.componentRefMap.set(
-          componentRef.instance,
-          componentRef
-        );
+        this.blockMovementService.newComponentAttached(componentRef);
       })
     );
   }
 
   determineMovePositionAction(action: MovePositionActions, index: number) {
-    return forkJoin([
-      this.blockMovementService.moveBlockComponentPosition(this.ngxEditor, action, index),
-      this.blockMovementService.updateComponentIndices(this.ngxEditor),
-    ]);
+    return iif(
+      () => action === MovePositionActions.DELETE,
+      this.blockMovementService.removeBlockComponent(this.ngxEditor, index),
+      this.blockMovementService.moveBlockComponentPosition(
+        this.ngxEditor,
+        action,
+        index
+      )
+    ).pipe(
+      switchMap(() =>
+        this.blockMovementService.updateComponentIndices(this.ngxEditor)
+      )
+    );
   }
 }

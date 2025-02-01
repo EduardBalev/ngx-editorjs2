@@ -11,6 +11,10 @@ import {
 export class BlockMovementService {
   componentRefMap = new Map<object, ComponentRef<BlockComponent>>();
 
+  newComponentAttached(componentRef: ComponentRef<BlockComponent>) {
+    this.componentRefMap.set(componentRef.instance, componentRef);
+  }
+
   updateComponentIndices(ngxEditor: ViewContainerRef) {
     return from(this.componentRefMap.values()).pipe(
       tap((componentRef: any) =>
@@ -56,7 +60,24 @@ export class BlockMovementService {
         componentRef.setInput('sortIndex', newIndex);
         componentRef.setInput('autofocus', true);
       }),
-      defaultIfEmpty({ componentRef: null, currentIndex: -1, newIndex: -1 }),
+      defaultIfEmpty(false)
+    );
+  }
+
+  removeBlockComponent(ngxEditor: ViewContainerRef, index: number) {
+    return of(Array.from(this.componentRefMap.values())).pipe(
+      filter((componentRefs) => componentRefs.length !== 1),
+      map((componentRefs) =>
+        componentRefs.find(
+          (componentRef) =>
+            ngxEditor.indexOf(componentRef.hostView) === index - 1
+        )
+      ),
+      map((componentRef) =>
+        this.componentRefMap.delete(componentRef?.instance ?? {})
+      ),
+      tap((successful) => successful && ngxEditor.remove(index - 1)),
+      defaultIfEmpty(false)
     );
   }
 }

@@ -39,7 +39,8 @@ export class ToolFabService {
     filter(({ componentContext }) => componentContext !== null),
     distinctUntilChanged(
       ({ componentContext: previous }, { componentContext: current }) =>
-        previous!.index !== current!.index
+        previous!.index !== current!.index ||
+        previous!.viewContainerRef !== current!.viewContainerRef
           ? (previous!.viewContainerRef.clear(), false)
           : true
     ),
