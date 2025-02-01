@@ -54,6 +54,7 @@ export class NgxEditorJs2Service {
         new Map(blocks.map((block) => [block.blockId, block])).values()
       )
     ),
+    map((blocks) => blocks.sort((a, b) => a.sortIndex - b.sortIndex)),
     switchMap((blocks) => combineLatest([of(blocks), this.supportedBlocks$])),
     map(([blocks, supportedBlocks]) => ({
       blocks,

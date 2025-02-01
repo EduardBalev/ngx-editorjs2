@@ -31,6 +31,7 @@ export interface BlockComponent {
   formControlName: InputSignal<string>;
   formGroup: InputSignal<FormGroup>;
   blockOptionActions: InputSignal<BlockOptionAction[]>;
+  actionCallback?: (string: string) => void;
 }
 
 export interface BlockOptionAction {

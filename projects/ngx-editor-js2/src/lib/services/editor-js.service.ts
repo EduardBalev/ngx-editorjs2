@@ -82,6 +82,7 @@ export class EditorJsService {
     component,
     blockId,
     autofocus,
+    savedAction,
     sortIndex: index,
   }: NgxEditorJsBlockWithComponent) {
     return of(blockId).pipe(
@@ -93,6 +94,8 @@ export class EditorJsService {
         componentRef.setInput('formGroup', this.formGroup);
         componentRef.setInput('formControlName', controlName);
         componentRef.setInput('autofocus', autofocus);
+
+        savedAction && componentRef.instance.actionCallback?.(savedAction);
 
         this.blockMovementService.newComponentAttached(componentRef);
       })
