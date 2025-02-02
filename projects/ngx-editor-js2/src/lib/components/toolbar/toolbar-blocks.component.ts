@@ -54,7 +54,7 @@ import { BlockComponent, SupportedBlock } from '../../ngx-editor-js2.interface';
         }
 
         .block-list-container {
-          background: var(--mat-sys-surface);
+          background: var(--mat-sys-secondary-container);
           border-radius: 4px;
         }
 
@@ -64,7 +64,7 @@ import { BlockComponent, SupportedBlock } from '../../ngx-editor-js2.interface';
           border-bottom-left-radius: 4px;
           border-bottom-right-radius: 4px;
           overflow: auto;
-          color: var(--mat-sys-on-tertiary-container);
+          color: var(--mat-sys-on-secondary-container);
         }
 
         mat-list-item {

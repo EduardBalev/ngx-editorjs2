@@ -124,8 +124,8 @@ import { MatListModule } from '@angular/material/list';
   styles: [
     `
       :host {
-        color: var(--mat-sys-on-tertiary-container);
-        background: var(--mat-sys-tertiary-container);
+        color: var(--mat-sys-on-secondary);
+        background: var(--mat-sys-secondary);
         .block-list-container {
           border-radius: 4px;
         }

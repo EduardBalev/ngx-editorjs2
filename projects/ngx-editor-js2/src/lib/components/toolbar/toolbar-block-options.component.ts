@@ -47,7 +47,7 @@ import {
           max-height: 128px;
           border-radius: 4px;
           overflow: auto;
-          background: var(--mat-sys-tertiary-container);
+          background: var(--mat-sys-secondary);
           .action-btn {
             cursor: pointer;
             width: 42px;
@@ -57,11 +57,12 @@ import {
             justify-content: center;
             border-radius: 4px;
 
-            color: var(--mat-sys-on-tertiary-container);
-            background: var(--mat-sys-tertiary-container);
+            color: var(--mat-sys-on-secondary);
+            background: var(--mat-sys-secondary);
             &:hover,
             &:focus {
-              background: var(--mat-sys-surface-bright);
+              color: var(--mat-sys-secondary);
+              background: var(--mat-sys-on-secondary);
             }
           }
         }
