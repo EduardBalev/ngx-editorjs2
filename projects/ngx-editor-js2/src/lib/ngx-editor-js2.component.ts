@@ -1,10 +1,11 @@
 import { Component, inject, input } from '@angular/core';
 import { EditorJsComponent } from './components/editor-js.component';
 import { AsyncPipe } from '@angular/common';
-import { combineLatest } from 'rxjs';
+import { combineLatest, debounceTime, fromEvent, switchMap } from 'rxjs';
 import { ToolFabService } from './services/tool-fab.service';
 import { NgxEditorJs2Service } from './services/ngx-editor-js2.service';
 import { NgxEditorJsBlock } from './ngx-editor-js2.interface';
+import { ToolbarInlineService } from './services/toolbar-inline.service';
 
 @Component({
   selector: 'ngx-editor-js2',
@@ -19,8 +20,16 @@ import { NgxEditorJsBlock } from './ngx-editor-js2.interface';
 export class NgxEditorJs2Component {
   blocks = input<NgxEditorJsBlock[]>([]);
 
+  inlineToolbarSerivce = inject(ToolbarInlineService);
+
   bootstrapEditorJs$ = combineLatest([
     inject(NgxEditorJs2Service).loadBlocks$,
     inject(ToolFabService).toolbarComponentRef$,
+    fromEvent(document, 'selectionchange').pipe(
+      debounceTime(200),
+      switchMap((event) =>
+        this.inlineToolbarSerivce.determineToDisplayInlineToolbarBlock(event)
+      )
+    ),
   ]);
 }

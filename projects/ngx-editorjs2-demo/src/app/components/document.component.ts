@@ -47,6 +47,7 @@ export const TEST_DATA: NgxEditorJsBlock[] = [
   selector: 'app-document',
   imports: [MatCard, MatCardContent, NgxEditorJs2Component],
   template: `
+    <h1>Select the text to NOT see the inline toolbar</h1>
     <mat-card appearance="outlined">
       <mat-card-content>
         <ngx-editor-js2 [blocks]="TEST_DATA"></ngx-editor-js2>
