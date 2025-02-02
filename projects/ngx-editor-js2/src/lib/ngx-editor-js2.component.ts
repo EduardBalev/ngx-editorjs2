@@ -25,13 +25,10 @@ export class NgxEditorJs2Component {
   bootstrapEditorJs$ = combineLatest([
     inject(NgxEditorJs2Service).loadBlocks$,
     inject(ToolFabService).toolbarComponentRef$,
-    forkJoin([
-      fromEvent(document, 'selectionchange'),
-      fromEvent(document, 'mouseup'),
-    ])
+    fromEvent(document, 'selectionchange')
     .pipe(
       debounceTime(200),
-      switchMap(([event]) =>
+      switchMap((event) =>
         this.inlineToolbarSerivce.determineToDisplayInlineToolbarBlock(event)
       )
     ),

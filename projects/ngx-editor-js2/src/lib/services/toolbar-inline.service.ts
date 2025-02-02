@@ -1,15 +1,7 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { inject, Injectable } from '@angular/core';
-import {
-  exhaustMap,
-  filter,
-  lastValueFrom,
-  map,
-  merge,
-  of,
-  tap,
-} from 'rxjs';
+import { exhaustMap, filter, lastValueFrom, map, merge, of, tap } from 'rxjs';
 import { ToolbarInlineComponent } from '../components/toolbar-inline/toolbar-inline.component';
 
 @Injectable({
@@ -20,8 +12,10 @@ export class ToolbarInlineService {
   overlayRef!: OverlayRef;
 
   determineToDisplayInlineToolbarBlock(_event: Event) {
+    this.overlayRef?.hasAttached() && this.overlayRef.dispose(); // So hacky
     return of(window.getSelection()).pipe(
       filter((selection) => selection !== null),
+      filter((selection) => selection.rangeCount > 0),
       filter((selection) => selection.toString().length > 0),
       filter((selection) => selection.toString() !== ''),
       map((selection) => ({
@@ -34,7 +28,6 @@ export class ToolbarInlineService {
   }
 
   getSelectionParent(selection: Selection): HTMLElement | null {
-    if (selection.rangeCount === 0) return null;
     const range = selection.getRangeAt(0);
     return range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
       ? (range.commonAncestorContainer as HTMLElement)
@@ -48,41 +41,47 @@ export class ToolbarInlineService {
   attachInlineToolbar(selection: Selection) {
     return of(selection.getRangeAt(0)).pipe(
       map((range) => range.getBoundingClientRect()),
-      map((selectionRect) => {
-        this.overlayRef = this.overlay.create({
-          hasBackdrop: true,
-          backdropClass: 'cdk-overlay-transparent-backdrop',
-          positionStrategy: this.overlay
-            .position()
-            .flexibleConnectedTo(selectionRect)
-            .withPositions([
-              {
-                offsetY: 8,
-                originX: 'start',
-                originY: 'bottom',
-                overlayX: 'start',
-                overlayY: 'top',
-              },
-            ]),
-        });
+      map((selectionRect) => this.createOverlay(selectionRect)),
+      tap((overlayRef) => (this.overlayRef = overlayRef)),
+      map((overlayRef) => {
         // To tired to do this properly right now
         // passing the refs down the pipe adds a bug
-        // user selects text with a drag (mousedown → mousemove → mouseup)
-        const { instance: inlineToolbar } = this.overlayRef.attach(
+        // user selects text with a drag
+        // (mousedown → mousemove → wait → mousemove → mouseup)
+        const { instance: inlineToolbar } = overlayRef.attach(
           new ComponentPortal(ToolbarInlineComponent)
         );
         inlineToolbar.selection = selection;
         lastValueFrom(
           merge(
-            this.overlayRef.backdropClick(),
+            overlayRef.backdropClick(),
             inlineToolbar.closeInlineToobarOverlayEmitter
           ).pipe(
-            tap(() => this.overlayRef.dispose()),
+            tap(() => overlayRef.dispose()),
             tap(() => selection.removeAllRanges())
           )
         );
         return true;
       })
     );
+  }
+
+  createOverlay(selectionRect: DOMRect) {
+    return this.overlay.create({
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      positionStrategy: this.overlay
+        .position()
+        .flexibleConnectedTo(selectionRect)
+        .withPositions([
+          {
+            offsetY: 8,
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top',
+          },
+        ]),
+    });
   }
 }
