@@ -151,7 +151,6 @@ import { MatListModule } from '@angular/material/list';
         }
 
         .block-option-input {
-          // 165
           width: 197px;
           height: 32px;
           border: none;
