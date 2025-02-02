@@ -49,6 +49,15 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
         .large {
           font: var(--mat-sys-body-large);
         }
+        .title-small {
+          font: var(--mat-sys-title-small);
+        }
+        .title-medium {
+          font: var(--mat-sys-title-medium);
+        }
+        .title-large {
+          font: var(--mat-sys-title-large);
+        }
       }
     `,
   ],
@@ -62,6 +71,9 @@ export class ParagraphBlockComponent implements BlockComponent {
     { action: 'small', icon: 'density_small' },
     { action: 'medium', icon: 'density_medium' },
     { action: 'large', icon: 'density_large' },
+    { action: 'title-small', text: 'TS' },
+    { action: 'title-medium', text: 'TM' },
+    { action: 'title-large', text: 'TL' },
   ]);
 
   className = signal<string>('medium');
