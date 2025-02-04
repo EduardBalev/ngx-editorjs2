@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import { Component, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { AppService } from '../services/app.service';
 
 @Component({
   selector: 'app-hero',
-  imports: [MatButtonModule],
+  imports: [MatButton],
   template: `
     <header class="header-background">
       <div class="header-section">
@@ -70,7 +71,11 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
   ],
 })
 export class HeroComponent {
+
+  appService = inject(AppService);
+
   getValue() {
-    console.log('Get Value');
+    this.appService.requestBlocks.next({});
   }
+
 }

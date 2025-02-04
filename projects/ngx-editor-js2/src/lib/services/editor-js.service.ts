@@ -6,6 +6,9 @@ import {
   filter,
   forkJoin,
   iif,
+  lastValueFrom,
+  map,
+  Observable,
   of,
   switchMap,
   tap,
@@ -13,9 +16,11 @@ import {
 import {
   BlockComponent,
   MovePositionActions,
+  NgxEditorJsBlock,
   NgxEditorJsBlockWithComponent,
 } from '../ngx-editor-js2.interface';
 import { BlockMovementService } from './block-movement.service';
+import { NgxEditorJs2Component } from '../ngx-editor-js2.component';
 
 const createUID = () => Math.random().toString(36).substring(7);
 @Injectable({
@@ -30,12 +35,36 @@ export class EditorJsService {
   ngxEditor!: ViewContainerRef;
   formGroup = this.formBuilder.group({});
 
-  blockComponents = new BehaviorSubject<Type<BlockComponent>[]>([]);
+  blockComponents = new BehaviorSubject<Type<NgxEditorJs2Component>[]>([]);
   blockComponents$ = this.blockComponents.asObservable();
 
   // TODO - Handle this idiomatically
   setNgxEditor(ngxEditor: ViewContainerRef) {
     this.ngxEditor = ngxEditor;
+  }
+
+  getBlocks$(): Observable<NgxEditorJsBlock[]> {
+    return new Observable<NgxEditorJsBlock[]>((observer) => {
+      lastValueFrom(
+        this.blockMovementService.getNgxEditorJsBlocks().pipe(
+          map((componentRefs) =>
+            componentRefs.map<NgxEditorJsBlock>((componentRef) => ({
+              blockId: createUID(),
+              sortIndex: componentRef.instance.sortIndex(),
+              componentInstanceName: componentRef.instance.constructor.name,
+              dataClean: componentRef.instance
+                .formGroup()
+                .get(componentRef.instance.formControlName())?.value,
+            }))
+          )
+        )
+      )
+        .then((blocks) => {
+          observer.next(blocks);
+          observer.complete();
+        })
+        .catch((error) => observer.error(error));
+    });
   }
 
   createNgxEditorJsBlockWithComponent(
@@ -59,14 +88,7 @@ export class EditorJsService {
       this.createFormGroupControl(ngxEditorJsBlock),
       this.attachComponent(ngxEditorJsBlock),
       this.blockMovementService.updateComponentIndices(this.ngxEditor),
-    ]).pipe(
-      tap(([_formControl, _componentRef]) =>
-        this.blockComponents.next([
-          ...this.blockComponents.value,
-          ngxEditorJsBlock.component,
-        ])
-      )
-    );
+    ]);
   }
 
   createFormGroupControl({
@@ -86,7 +108,7 @@ export class EditorJsService {
     sortIndex: index,
   }: NgxEditorJsBlockWithComponent) {
     return of(blockId).pipe(
-      tap((controlName) => {
+      map((controlName) => {
         const componentRef = this.ngxEditor.createComponent(component, {
           index,
         });
@@ -98,6 +120,7 @@ export class EditorJsService {
         savedAction && componentRef.instance.actionCallback?.(savedAction);
 
         this.blockMovementService.newComponentAttached(componentRef);
+        return componentRef;
       })
     );
   }

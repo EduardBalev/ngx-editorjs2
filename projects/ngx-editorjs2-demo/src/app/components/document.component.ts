@@ -1,56 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { NgxEditorJs2Component, NgxEditorJsBlock } from 'ngx-editor-js2';
-
-export const TEST_DATA: NgxEditorJsBlock[] = [
-  {
-    blockId: 'iovlbzgosf',
-    sortIndex: 0,
-    componentInstanceName: 'HeaderBlockComponent',
-    dataClean: 'Prerequisites',
-    savedAction: 'h1',
-  },
-  {
-    blockId: 'bu23hwyltwl',
-    sortIndex: 1,
-    componentInstanceName: 'ParagraphBlockComponent',
-    dataClean:
-      'Skips the very first call to startViewTransition. This can be useful for disabling the animation during the applications initial loading phase.',
-    savedAction: 'meduim',
-  },
-  {
-    blockId: 'bu23hwyltss',
-    sortIndex: 4,
-    componentInstanceName: 'ParagraphBlockComponent',
-    dataClean:
-      'Evaluation of a template expression should have no visible side effects. Use the syntax for template expressions to help avoid side effects. In general, the correct syntax prevents you from assigning a value to anything in a property binding expression. The syntax also prevents you from using increment and decrement operators.',
-    savedAction: 'meduim',
-  },
-  {
-    blockId: 'iovlbzgosuu',
-    sortIndex: 3,
-    componentInstanceName: 'HeaderBlockComponent',
-    dataClean: 'Woah! This is cool..',
-    savedAction: 'h3',
-  },
-  {
-    blockId: 'bu23hwyltsww',
-    sortIndex: 2,
-    componentInstanceName: 'ParagraphBlockComponent',
-    dataClean:
-      'Material Design uses color to create accessible, personal color schemes that communicate your products hierarchy, state, and brand. See Material Designs Color System page to learn more about its use and purpose.',
-      savedAction: 'small',
-  },
-];
+import { AppService, TEST_DATA } from '../services/app.service';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-document',
-  imports: [MatCard, MatCardContent, NgxEditorJs2Component],
+  imports: [
+    MatCard,
+    MatCardContent,
+    NgxEditorJs2Component,
+    AsyncPipe,
+    JsonPipe,
+  ],
   template: `
     <h1>Select the text to NOT see the inline toolbar</h1>
+    <pre><code>{{ appService.ngxEditorJsBlocks$ | async | json }}</code></pre>
     <mat-card appearance="outlined">
       <mat-card-content>
-        <ngx-editor-js2 [blocks]="TEST_DATA"></ngx-editor-js2>
+        <ngx-editor-js2
+          [blocks]="TEST_DATA"
+          [requestBlocks]="appService.requestBlocks$ | async"
+          (blocksRequested)="appService.handleBlocks($event)"
+        ></ngx-editor-js2>
       </mat-card-content>
     </mat-card>
   `,
@@ -71,4 +43,5 @@ export const TEST_DATA: NgxEditorJsBlock[] = [
 })
 export class DocumentComponent {
   TEST_DATA = TEST_DATA;
+  appService = inject(AppService);
 }

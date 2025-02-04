@@ -11,6 +11,10 @@ import {
 export class BlockMovementService {
   componentRefMap = new Map<object, ComponentRef<BlockComponent>>();
 
+  getNgxEditorJsBlocks() {
+    return of(Array.from(this.componentRefMap.values()));
+  }
+
   newComponentAttached(componentRef: ComponentRef<BlockComponent>) {
     this.componentRefMap.set(componentRef.instance, componentRef);
   }

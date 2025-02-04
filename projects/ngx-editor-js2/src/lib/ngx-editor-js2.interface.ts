@@ -1,6 +1,6 @@
-import { InjectionToken, InputSignal, Type } from "@angular/core";
-import { FormGroup } from "@angular/forms";
-import { Observable } from "rxjs";
+import { InjectionToken, InputSignal, Type } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 export const NGX_EDITORJS_OPTIONS = new InjectionToken<NgxEditorjsOptions>(
   'NGX_EDITORJS_OPTIONS'
@@ -28,6 +28,7 @@ export interface NgxEditorJsBlockWithComponent extends NgxEditorJsBlock {
 }
 
 export interface BlockComponent {
+  sortIndex: InputSignal<number>;
   formControlName: InputSignal<string>;
   formGroup: InputSignal<FormGroup>;
   blockOptionActions: InputSignal<BlockOptionAction[]>;
@@ -46,12 +47,12 @@ export enum MovePositionActions {
   DELETE = 'DELETE',
 }
 
-export type TAddBlockCallback= (
+export type TAddBlockCallback = (
   block: Type<BlockComponent>,
   index: number
 ) => Observable<unknown>;
 
-export type TMoveBlockPositionCallback= (
+export type TMoveBlockPositionCallback = (
   action: MovePositionActions,
   index: number
 ) => Observable<unknown>;
