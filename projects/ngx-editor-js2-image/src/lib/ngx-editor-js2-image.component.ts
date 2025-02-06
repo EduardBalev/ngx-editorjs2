@@ -44,8 +44,8 @@ type Value = { url: string; title: string };
       <div class="image-container" [ngClass]="activeImageClass()">
         <img
           class="image-block"
-          [src]="value()?.url"
-          [title]="value()?.title"
+          [src]="value().url"
+          [title]="value().title"
           onerror="this.onerror=null;this.src='https://dummyimage.com/640x360/000/AAF'"
         />
         <button
