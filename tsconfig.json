@@ -12,6 +12,9 @@
     "paths": {
       "ngx-editor-js2": [
         "./dist/ngx-editor-js2"
+      ],
+      "ngx-editor-js2-image": [
+        "./dist/ngx-editor-js2-image"
       ]
     },
     "skipLibCheck": true,

@@ -2,10 +2,6 @@ import { InjectionToken, InputSignal, Type } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-export const NGX_EDITORJS_OPTIONS = new InjectionToken<NgxEditorjsOptions>(
-  'NGX_EDITORJS_OPTIONS'
-);
-
 export interface NgxEditorjsOptions {
   consumerSupportedBlocks?: SupportedBlock[];
 }

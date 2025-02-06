@@ -41,6 +41,13 @@ export const TEST_DATA: NgxEditorJsBlock[] = [
       'Material Design uses color to create accessible, personal color schemes that communicate your products hierarchy, state, and brand. See Material Designs Color System page to learn more about its use and purpose.',
     savedAction: 'small',
   },
+  {
+    blockId: 'n177d7',
+    sortIndex: 5,
+    componentInstanceName: 'NgxEditorJs2ImageComponent',
+    dataClean:
+      '{"url":"https://res.cloudinary.com/dowdpiikk/image/upload/w_650,q_auto:best,f_auto/v1709445782/lnyst5aqppuin8wt73ci.webp","title":"test"}',
+  },
 ];
 
 export const TEST_DATA_TWO: NgxEditorJsBlock[] = [
@@ -63,8 +70,7 @@ export const TEST_DATA_TWO: NgxEditorJsBlock[] = [
     blockId: 'bu23hwyltss',
     sortIndex: 2,
     componentInstanceName: 'ParagraphBlockComponent',
-    dataClean:
-      'SOmeehting Different then the last one',
+    dataClean: 'SOmeehting Different then the last one',
     savedAction: 'meduim',
   },
   {
@@ -84,7 +90,6 @@ export const TEST_DATA_TWO: NgxEditorJsBlock[] = [
   },
 ];
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -96,10 +101,6 @@ export class AppService {
   requestBlocks$ = this.requestBlocks.asObservable();
 
   handleBlocks(blocks$: Observable<NgxEditorJsBlock[]>) {
-    void lastValueFrom(
-      blocks$.pipe(
-        tap(console.table),
-      )
-    );
+    void lastValueFrom(blocks$.pipe(tap(console.table)));
   }
 }

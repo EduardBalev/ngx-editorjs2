@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import { HeaderBlockComponent } from '../components/blocks/header-block.component';
 import { ParagraphBlockComponent } from '../components/blocks/paragraph-block.component';
 import {
@@ -11,14 +11,19 @@ import {
   mergeMap,
   of,
   switchMap,
+  tap,
 } from 'rxjs';
 import { EditorJsService } from './editor-js.service';
 import {
-  NGX_EDITORJS_OPTIONS,
+  NgxEditorjsOptions,
   NgxEditorJsBlock,
   NgxEditorJsBlockWithComponent,
   SupportedBlock,
 } from '../ngx-editor-js2.interface';
+
+export const NGX_EDITORJS_OPTIONS = new InjectionToken<NgxEditorjsOptions>(
+  'NGX_EDITORJS_OPTIONS'
+);
 
 @Injectable({
   providedIn: 'root',
