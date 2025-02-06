@@ -41,10 +41,10 @@ import { of } from 'rxjs';
           overflow: hidden;
           position: relative;
           height: 360px;
-          background: var(--mat-sys-primary-fixed-dim);
           color: var(--mat-sys-on-secondary);
-          // background: var(--mat-sys-secondary);
+          background: var(--mat-sys-secondary);
           // color: var(--mat-sys-on-primary-fixed);
+          // background: var(--mat-sys-primary-fixed-dim);
           &::before {
             content: '';
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="48" width="48" fill="%23FFFFFF"><path d="M14.5 40V13H4V8h26v5H19.5v27Zm18 0V23H26v-5h18v5h-6.5v17Z"/></svg>');
@@ -100,7 +100,7 @@ export class HeroComponent {
     this.appService.requestBlocks.next({});
   }
 
-  switch = true;
+  switch = false;
   loadValue() {
     this.switch = !this.switch;
     this.appService.ngxEditorJsBlocks.next(this.switch ? TEST_DATA : TEST_DATA_TWO );
