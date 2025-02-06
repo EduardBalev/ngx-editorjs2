@@ -121,10 +121,11 @@ import {
 export class ToolbarComponent {
   componentContextPositionIndex = input.required<number>();
   supportedBlocks = input.required<SupportedBlock[]>();
+  blockOptionActions = input<BlockOptionAction[]>();
+  actionCallback = input<(action: string) => void>(() => () => {});
+  formControlName = input<string>();
   addBlockCallback = input.required<TAddBlockCallback>();
   moveBlockPositionCallback = input.required<TMoveBlockPositionCallback>();
-  actionCallback = input<(action: string) => void>(() => () => {});
-  blockOptionActions = input<BlockOptionAction[]>();
 
   openBlocks = signal<boolean>(false);
   openBlocksOption = signal<boolean>(false);

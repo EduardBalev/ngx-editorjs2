@@ -7,6 +7,7 @@ import {
   lastValueFrom,
   map,
   switchMap,
+  tap,
 } from 'rxjs';
 import { ToolbarComponent } from '../components/toolbar/toolbar.component';
 import { EditorJsService } from './editor-js.service';
@@ -22,6 +23,7 @@ type ComponentContext = {
   viewContainerRef: ViewContainerRef;
   blockOptionActions: BlockOptionAction[];
   actionCallback: (v: string) => void;
+  formControlName: string;
 } | null;
 
 @Injectable({
@@ -45,21 +47,27 @@ export class ToolFabService {
           : true
     ),
     map(({ componentContext, supportedBlocks }) => {
-      const { index, viewContainerRef, blockOptionActions, actionCallback } =
-        componentContext!;
+      const {
+        index,
+        viewContainerRef,
+        blockOptionActions,
+        actionCallback,
+        formControlName,
+      } = componentContext!;
       // TODO We will need to create a ToolbarBottomRailComponent to handle the mobile view
       const componentRef = viewContainerRef.createComponent(ToolbarComponent);
       componentRef.setInput('componentContextPositionIndex', index + 1);
       componentRef.setInput('supportedBlocks', supportedBlocks);
       componentRef.setInput('blockOptionActions', blockOptionActions);
       componentRef.setInput('actionCallback', actionCallback);
+      componentRef.setInput('formControlName', formControlName);
       componentRef.setInput('addBlockCallback', this.addBlock.bind(this));
       componentRef.setInput(
         'moveBlockPositionCallback',
         this.movePositionAction.bind(this)
       );
       return componentRef;
-    })
+    }),
   );
 
   addBlock(block: Type<BlockComponent>, index: number) {
@@ -70,9 +78,17 @@ export class ToolFabService {
       );
   }
 
-  movePositionAction(action: MovePositionActions, index: number) {
+  movePositionAction(
+    action: MovePositionActions,
+    index: number,
+    formControlName: string
+  ) {
     return lastValueFrom(
-      this.editorJsService.determineMovePositionAction(action, index)
+      this.editorJsService.determineMovePositionAction(
+        action,
+        index,
+        formControlName
+      )
     );
   }
 }

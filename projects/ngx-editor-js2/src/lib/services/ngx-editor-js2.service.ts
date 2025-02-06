@@ -4,7 +4,9 @@ import { ParagraphBlockComponent } from '../components/blocks/paragraph-block.co
 import {
   BehaviorSubject,
   combineLatest,
-  filter,
+  delay,
+  exhaustMap,
+  forkJoin,
   map,
   mergeMap,
   of,
@@ -14,6 +16,7 @@ import { EditorJsService } from './editor-js.service';
 import {
   NGX_EDITORJS_OPTIONS,
   NgxEditorJsBlock,
+  NgxEditorJsBlockWithComponent,
   SupportedBlock,
 } from '../ngx-editor-js2.interface';
 
@@ -47,8 +50,18 @@ export class NgxEditorJs2Service {
   ]).pipe(map(([internal, consumer]) => [...internal, ...consumer]));
 
   blocksToLoad = new BehaviorSubject<NgxEditorJsBlock[]>([]);
+
   loadBlocks$ = this.blocksToLoad.asObservable().pipe(
-    filter((blocks) => blocks.length > 0),
+    // distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+    // The NgxEditorJs2Component loads the editor-js component after the blocks are loaded
+    // So the ViewContainerRef is not available at the time of loading the blocks
+    // Wait until next frame to load the blocks
+    delay(0),
+    exhaustMap((blocks) =>
+      forkJoin([of(blocks), this.editorJsService.clearBlocks()])
+    ),
+    map(([blocks]) => (blocks.length > 0 ? blocks : this.loadDefaultBlocks())),
+    // tap((blocks) => console.log('Blocks to load', blocks)),
     map((blocks) =>
       Array.from(
         new Map(blocks.map((block) => [block.blockId, block])).values()
@@ -72,8 +85,22 @@ export class NgxEditorJs2Service {
     ),
     mergeMap((blocks) =>
       combineLatest(
-        blocks.map((block) => this.editorJsService.addBlockComponent(block))
+        blocks.map((block: NgxEditorJsBlockWithComponent) =>
+          this.editorJsService.addBlockComponent(block)
+        )
       )
     )
   );
+
+  loadDefaultBlocks() {
+    return [
+      {
+        blockId: 'tmdjr',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: "Let's get started... 🚀",
+        savedAction: 'h1',
+      },
+    ];
+  }
 }

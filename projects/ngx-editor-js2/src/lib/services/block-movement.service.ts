@@ -11,6 +11,10 @@ import {
 export class BlockMovementService {
   componentRefMap = new Map<object, ComponentRef<BlockComponent>>();
 
+  clearComponentRefs() {
+    this.componentRefMap.clear();
+  }
+
   getNgxEditorJsBlocks() {
     return of(Array.from(this.componentRefMap.values()));
   }
@@ -68,9 +72,13 @@ export class BlockMovementService {
     );
   }
 
-  removeBlockComponent(ngxEditor: ViewContainerRef, index: number) {
+  removeBlockComponent(
+    ngxEditor: ViewContainerRef,
+    index: number,
+    clear = false
+  ) {
     return of(Array.from(this.componentRefMap.values())).pipe(
-      filter((componentRefs) => componentRefs.length !== 1),
+      filter((componentRefs) => clear || componentRefs.length !== 1),
       map((componentRefs) =>
         componentRefs.find(
           (componentRef) =>

@@ -43,6 +43,48 @@ export const TEST_DATA: NgxEditorJsBlock[] = [
   },
 ];
 
+export const TEST_DATA_TWO: NgxEditorJsBlock[] = [
+  {
+    blockId: 'iovlbzgosf',
+    sortIndex: 0,
+    componentInstanceName: 'HeaderBlockComponent',
+    dataClean: 'Different Prerequisites',
+    savedAction: 'h1',
+  },
+  {
+    blockId: 'bu23hwyltwl',
+    sortIndex: 1,
+    componentInstanceName: 'ParagraphBlockComponent',
+    dataClean:
+      'Skips the very first call to startViewTransition. This can be useful for disabling the animation during the applications initial loading phase.',
+    savedAction: 'meduim',
+  },
+  {
+    blockId: 'bu23hwyltss',
+    sortIndex: 2,
+    componentInstanceName: 'ParagraphBlockComponent',
+    dataClean:
+      'SOmeehting Different then the last one',
+    savedAction: 'meduim',
+  },
+  {
+    blockId: 'iovlbzgosuu',
+    sortIndex: 3,
+    componentInstanceName: 'HeaderBlockComponent',
+    dataClean: 'Woah! This is cool..',
+    savedAction: 'h3',
+  },
+  {
+    blockId: 'bu23hwyltsww',
+    sortIndex: 2,
+    componentInstanceName: 'ParagraphBlockComponent',
+    dataClean:
+      'Material Design uses color to create accessible, personal color schemes that communicate your products hierarchy, state, and brand. See Material Designs Color System page to learn more about its use and purpose.',
+    savedAction: 'small',
+  },
+];
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -55,7 +97,9 @@ export class AppService {
 
   handleBlocks(blocks$: Observable<NgxEditorJsBlock[]>) {
     void lastValueFrom(
-      blocks$.pipe(tap((blocks) => this.ngxEditorJsBlocks.next(blocks)))
+      blocks$.pipe(
+        tap(console.table),
+      )
     );
   }
 }

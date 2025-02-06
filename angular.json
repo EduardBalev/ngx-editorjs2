@@ -21,7 +21,7 @@
             "index": "projects/ngx-editorjs2-demo/src/index.html",
             "browser": "projects/ngx-editorjs2-demo/src/main.ts",
             "polyfills": [
-              "zone.js"
+
             ],
             "tsConfig": "projects/ngx-editorjs2-demo/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -80,8 +80,6 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": [
-              "zone.js",
-              "zone.js/testing"
             ],
             "tsConfig": "projects/ngx-editorjs2-demo/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
@@ -126,8 +124,6 @@
           "options": {
             "tsConfig": "projects/ngx-editor-js2/tsconfig.spec.json",
             "polyfills": [
-              "zone.js",
-              "zone.js/testing"
             ]
           }
         }

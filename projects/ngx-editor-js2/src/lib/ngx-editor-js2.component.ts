@@ -4,15 +4,17 @@ import { AsyncPipe } from '@angular/common';
 import {
   combineLatest,
   debounceTime,
+  defaultIfEmpty,
   fromEvent,
   Observable,
+  startWith,
   switchMap,
 } from 'rxjs';
 import { ToolFabService } from './services/tool-fab.service';
-import { NgxEditorJs2Service } from './services/ngx-editor-js2.service';
 import { NgxEditorJsBlock } from './ngx-editor-js2.interface';
 import { ToolbarInlineService } from './services/toolbar-inline.service';
 import { EditorJsService } from './services/editor-js.service';
+import { NgxEditorJs2Service } from './services/ngx-editor-js2.service';
 
 @Component({
   selector: 'ngx-editor-js2',
@@ -25,24 +27,25 @@ import { EditorJsService } from './services/editor-js.service';
   `,
 })
 export class NgxEditorJs2Component {
-  blocks = input<NgxEditorJsBlock[]>([]);
+  inlineToolbarSerivce = inject(ToolbarInlineService);
+  editorJsService = inject(EditorJsService);
+  ngxEditorJs2Service = inject(NgxEditorJs2Service);
 
+  blocks = input<NgxEditorJsBlock[]>([]);
   blocksRequested = output<Observable<NgxEditorJsBlock[]>>();
   requestBlocks = input.required({
     transform: (_v: unknown) =>
       this.blocksRequested.emit(this.editorJsService.getBlocks$()),
   });
 
-  inlineToolbarSerivce = inject(ToolbarInlineService);
-  editorJsService = inject(EditorJsService);
   bootstrapEditorJs$ = combineLatest([
-    inject(NgxEditorJs2Service).loadBlocks$,
     inject(ToolFabService).toolbarComponentRef$,
+    this.ngxEditorJs2Service.loadBlocks$,
     fromEvent(document, 'selectionchange').pipe(
       debounceTime(200),
       switchMap((event) =>
         this.inlineToolbarSerivce.determineToDisplayInlineToolbarBlock(event)
       )
-    ),
+    )
   ]);
 }

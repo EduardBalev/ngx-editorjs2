@@ -20,11 +20,12 @@ export type ToolbarComponentRef = Observable<ComponentRef<ToolbarComponent>>;
 export class ToolbarFabDirective {
   toolFabService = inject(ToolFabService);
   viewContainerRef = inject(ViewContainerRef);
-  
+
   autofocus = input<boolean>();
   blockOptionActions = input<BlockOptionAction[]>();
   actionCallback = input.required<(action: string) => void>();
   componentContextPositionIndex = input.required<number>();
+  formControlName = input.required<string>();
 
   @HostListener('mouseenter') onMouseEnter() {
     this.toolFabService.componentContext.next({
@@ -32,6 +33,7 @@ export class ToolbarFabDirective {
       blockOptionActions: this.blockOptionActions() ?? [],
       actionCallback: this.actionCallback(),
       index: this.componentContextPositionIndex(),
+      formControlName: this.formControlName(),
     });
   }
 

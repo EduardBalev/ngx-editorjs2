@@ -1,10 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { AppService } from '../services/app.service';
+import { AppService, TEST_DATA, TEST_DATA_TWO } from '../services/app.service';
+import { MatTooltip } from '@angular/material/tooltip';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-hero',
-  imports: [MatButton],
+  imports: [MatButton, MatTooltip],
   template: `
     <header class="header-background">
       <div class="header-section">
@@ -13,7 +15,20 @@ import { AppService } from '../services/app.service';
           <h2>A Custom Themeable Angular Material 3 Component</h2>
         </div>
         <div class="header-start">
-          <button mat-flat-button (click)="getValue()">Save Blocks</button>
+          <button
+            mat-flat-button
+            matTooltip="Simulate loading blocks"
+            (click)="loadValue()"
+          >
+            Load Blocks
+          </button>
+          <button
+            mat-flat-button
+            matTooltip="Open the console for blocks"
+            (click)="getValue()"
+          >
+            Save Blocks
+          </button>
         </div>
       </div>
     </header>
@@ -71,11 +86,15 @@ import { AppService } from '../services/app.service';
   ],
 })
 export class HeroComponent {
-
   appService = inject(AppService);
 
   getValue() {
     this.appService.requestBlocks.next({});
   }
 
+  switch = true;
+  loadValue() {
+    this.switch = !this.switch;
+    this.appService.ngxEditorJsBlocks.next(this.switch ? TEST_DATA : TEST_DATA_TWO );
+  }
 }

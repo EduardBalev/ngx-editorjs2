@@ -15,14 +15,11 @@ import { lastValueFrom } from 'rxjs';
 @Component({
   selector: 'editor-js',
   imports: [CdkDropList],
-  template: `<div
-    cdkDropList
-    class="block-list"
-    (cdkDropListDropped)="drop($event)"
-  >
-    <ng-container #ngxEditor></ng-container>
-    <div></div>
-  </div>`,
+  template: `
+    <div cdkDropList class="block-list" (cdkDropListDropped)="drop($event)">
+      <ng-container #ngxEditor></ng-container>
+    </div>
+  `,
   styles: [
     `
       :host {
@@ -39,26 +36,28 @@ export class EditorJsComponent {
   ngxEditorJs2Service = inject(NgxEditorJs2Service);
 
   bootstrapEditorJs = input();
-  blocks = input.required<NgxEditorJsBlock[]>();
+  blocks = input.required({
+    transform: (value: NgxEditorJsBlock[]) =>
+      this.ngxEditorJs2Service.blocksToLoad.next(value),
+  });
+
   ngxEditor = viewChild.required('ngxEditor', { read: ViewContainerRef });
-
-  // * JUST DEBUGGING
-  // ngOnInit() {
-  //   this.editorJsService.formGroup.valueChanges.subscribe((value) => {
-  //     console.log('[formGroup.value] : ', value);
-  //   });
-
-  //   this.editorJsService.blockComponents$.subscribe((components) => {
-  //     console.log('[components] : ', components);
-  //   });
-  // }
 
   constructor() {
     effect(() => {
       this.editorJsService.setNgxEditor(this.ngxEditor());
-      this.ngxEditorJs2Service.blocksToLoad.next(this.blocks());
     });
   }
+
+  // * DEBUGGING
+  // ngOnInit() {
+  //   this.editorJsService.formGroup.valueChanges.subscribe((value) => {
+  //     console.log('[formGroup.value] : ', value);
+  //   });
+  //   this.editorJsService.blockComponents$.subscribe((components) => {
+  //     console.log('[components] : ', components);
+  //   });
+  // }
 
   drop(event: CdkDragDrop<string[]>) {
     lastValueFrom(

@@ -1,13 +1,14 @@
 import { inject, Injectable, Type, ViewContainerRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import {
-  BehaviorSubject,
+  combineLatest,
   defaultIfEmpty,
   filter,
   forkJoin,
   iif,
   lastValueFrom,
   map,
+  mergeMap,
   Observable,
   of,
   switchMap,
@@ -20,7 +21,6 @@ import {
   NgxEditorJsBlockWithComponent,
 } from '../ngx-editor-js2.interface';
 import { BlockMovementService } from './block-movement.service';
-import { NgxEditorJs2Component } from '../ngx-editor-js2.component';
 
 const createUID = () => Math.random().toString(36).substring(7);
 @Injectable({
@@ -35,9 +35,6 @@ export class EditorJsService {
   ngxEditor!: ViewContainerRef;
   formGroup = this.formBuilder.group({});
 
-  blockComponents = new BehaviorSubject<Type<NgxEditorJs2Component>[]>([]);
-  blockComponents$ = this.blockComponents.asObservable();
-
   // TODO - Handle this idiomatically
   setNgxEditor(ngxEditor: ViewContainerRef) {
     this.ngxEditor = ngxEditor;
@@ -48,15 +45,15 @@ export class EditorJsService {
       lastValueFrom(
         this.blockMovementService.getNgxEditorJsBlocks().pipe(
           map((componentRefs) =>
-            componentRefs.map<NgxEditorJsBlock>((componentRef) => ({
-              blockId: createUID(),
-              sortIndex: componentRef.instance.sortIndex(),
-              componentInstanceName: componentRef.instance.constructor.name,
-              dataClean: componentRef.instance
-                .formGroup()
-                .get(componentRef.instance.formControlName())?.value,
+            componentRefs.map<NgxEditorJsBlock>(({ instance }) => ({
+              blockId: instance.formControlName(),
+              sortIndex: instance.sortIndex(),
+              componentInstanceName: instance.constructor.name.slice(1),
+              dataClean: instance.formGroup().get(instance.formControlName())
+                ?.value,
             }))
-          )
+          ),
+          map((blocks) => blocks.sort((a, b) => a.sortIndex - b.sortIndex))
         )
       )
         .then((blocks) => {
@@ -125,10 +122,14 @@ export class EditorJsService {
     );
   }
 
-  determineMovePositionAction(action: MovePositionActions, index: number) {
+  determineMovePositionAction(
+    action: MovePositionActions,
+    index: number,
+    formControlName: string
+  ) {
     return iif(
       () => action === MovePositionActions.DELETE,
-      this.blockMovementService.removeBlockComponent(this.ngxEditor, index),
+      this.removeBlockComponent(index, formControlName),
       this.blockMovementService.moveBlockComponentPosition(
         this.ngxEditor,
         action,
@@ -150,6 +151,47 @@ export class EditorJsService {
       switchMap(() =>
         this.blockMovementService.updateComponentIndices(this.ngxEditor)
       ),
+      defaultIfEmpty(false)
+    );
+  }
+
+  removeBlockComponent(index: number, formControlName: string, clear = false) {
+    return combineLatest([
+      this.blockMovementService.removeBlockComponent(
+        this.ngxEditor,
+        index,
+        clear
+      ),
+      of(this.formGroup.removeControl(formControlName)),
+    ]);
+  }
+
+  clearBlocks() {
+    return this.blockMovementService.getNgxEditorJsBlocks().pipe(
+      filter((componentRefs) => componentRefs.length > 0),
+      map((componentRefs) =>
+        componentRefs.sort(
+          (a, b) => a.instance.sortIndex() - b.instance.sortIndex()
+        )
+      ),
+      mergeMap((componentRefs) =>
+        forkJoin(
+          Array.from(componentRefs.values()).map((componentRef) =>
+            this.removeBlockComponent(
+              componentRef.instance.sortIndex() + 1,
+              componentRef.instance.formControlName(),
+              true
+            )
+          )
+        )
+      ),
+      switchMap(() =>
+        this.blockMovementService.updateComponentIndices(this.ngxEditor)
+      ),
+      tap(() => {
+        this.blockMovementService.clearComponentRefs()
+        this.ngxEditor.clear()
+      }),
       defaultIfEmpty(false)
     );
   }

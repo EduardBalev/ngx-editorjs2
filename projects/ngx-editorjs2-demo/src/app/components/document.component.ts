@@ -1,25 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NgxEditorJs2Component, NgxEditorJsBlock } from 'ngx-editor-js2';
-import { AppService, TEST_DATA } from '../services/app.service';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { NgxEditorJs2Component } from 'ngx-editor-js2';
+import { AppService } from '../services/app.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-document',
-  imports: [
-    MatCard,
-    MatCardContent,
-    NgxEditorJs2Component,
-    AsyncPipe,
-    JsonPipe,
-  ],
+  imports: [MatCard, MatCardContent, NgxEditorJs2Component, AsyncPipe],
   template: `
-    <h1>Select the text to NOT see the inline toolbar</h1>
-    <pre><code>{{ appService.ngxEditorJsBlocks$ | async | json }}</code></pre>
     <mat-card appearance="outlined">
       <mat-card-content>
         <ngx-editor-js2
-          [blocks]="TEST_DATA"
+          [blocks]="(appService.ngxEditorJsBlocks$ | async)!"
           [requestBlocks]="appService.requestBlocks$ | async"
           (blocksRequested)="appService.handleBlocks($event)"
         ></ngx-editor-js2>
@@ -42,6 +34,5 @@ import { AsyncPipe, JsonPipe } from '@angular/common';
   ],
 })
 export class DocumentComponent {
-  TEST_DATA = TEST_DATA;
   appService = inject(AppService);
 }
