@@ -17,7 +17,7 @@ export interface DocsSiteTheme {
 })
 export class ThemePickerService {
   static THEME_EXAMPLE_ICON = 'assets/img/theme-demo-icon.svg';
-  static DEFAULT_THEME = 'green-palette';
+  static DEFAULT_THEME = 'azure-palette';
   static THEME_STRORAGE_KEY: string = 'theme-picker-current-name';
   static DARK_MODE_STRORAGE_KEY: string = 'dark-mode';
   static THEMES: DocsSiteTheme[] = [

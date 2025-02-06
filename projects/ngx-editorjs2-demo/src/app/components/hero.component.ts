@@ -20,14 +20,14 @@ import { of } from 'rxjs';
             matTooltip="Simulate loading blocks"
             (click)="loadValue()"
           >
-            Load Blocks
+            Load
           </button>
           <button
             mat-flat-button
             matTooltip="Open the console for blocks"
             (click)="getValue()"
           >
-            Save Blocks
+            Save
           </button>
         </div>
       </div>
@@ -66,19 +66,27 @@ import { of } from 'rxjs';
           align-items: center;
           height: 100%;
           text-align: center;
-        }
-        .header-headline {
-          h1 {
-            font-size: 56px;
-            font-weight: bold;
-            line-height: 56px;
-            margin: 15px 5px;
+          .header-headline {
+            h1 {
+              font-size: 56px;
+              font-weight: bold;
+              line-height: 56px;
+              margin: 15px 5px;
+            }
+            h2 {
+              font-size: 20px;
+              font-weight: 300;
+              line-height: 28px;
+              margin: 15px 0 25px 0;
+            }
           }
-          h2 {
-            font-size: 20px;
-            font-weight: 300;
-            line-height: 28px;
-            margin: 15px 0 25px 0;
+          .header-start {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            button {
+              margin: 0 5px;
+            }
           }
         }
       }
