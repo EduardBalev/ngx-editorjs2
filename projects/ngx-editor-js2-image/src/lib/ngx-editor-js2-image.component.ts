@@ -34,7 +34,6 @@ type Value = { url: string; title: string };
         controlAccessor
         toolbarFab
         class="image-container-overlay"
-        [ngClass]="activeImageClass()"
         [actionCallback]="actionCallbackBind"
         [autofocus]="autofocus()"
         [blockOptionActions]="blockOptionActions()"

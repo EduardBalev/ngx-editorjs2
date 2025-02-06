@@ -47,6 +47,7 @@ export const TEST_DATA: NgxEditorJsBlock[] = [
     componentInstanceName: 'NgxEditorJs2ImageComponent',
     dataClean:
       '{"url":"https://res.cloudinary.com/dowdpiikk/image/upload/w_650,q_auto:best,f_auto/v1709445782/lnyst5aqppuin8wt73ci.webp","title":"test"}',
+    savedAction: 'stretch',
   },
 ];
 
