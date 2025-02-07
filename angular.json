@@ -20,9 +20,7 @@
             "outputPath": "dist/ngx-editorjs2-demo",
             "index": "projects/ngx-editorjs2-demo/src/index.html",
             "browser": "projects/ngx-editorjs2-demo/src/main.ts",
-            "polyfills": [
-
-            ],
+            "polyfills": [],
             "tsConfig": "projects/ngx-editorjs2-demo/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -77,11 +75,10 @@
           "builder": "@angular-devkit/build-angular:extract-i18n"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/jest:run",
           "options": {
-            "polyfills": [
-            ],
-            "tsConfig": "projects/ngx-editorjs2-demo/tsconfig.spec.json",
+            "polyfills": [],
+            "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
@@ -120,11 +117,10 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/jest:run",
           "options": {
-            "tsConfig": "projects/ngx-editor-js2/tsconfig.spec.json",
-            "polyfills": [
-            ]
+            "tsConfig": "tsconfig.spec.json",
+            "polyfills": []
           }
         }
       }
@@ -151,13 +147,10 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular-builders/jest:run",
           "options": {
             "tsConfig": "projects/ngx-editor-js2-image/tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": []
           }
         }
       }

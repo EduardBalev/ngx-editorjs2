@@ -1,135 +1,239 @@
-// import { TestBed } from '@angular/core/testing';
-// import { NgxEditorJs2Service, NGX_EDITORJS_OPTIONS } from './ngx-editor-js2.service';
-// import { EditorJsService } from './editor-js.service';
-// import { BehaviorSubject, of } from 'rxjs';
-// import { SupportedBlock, NgxEditorJsBlock, BlockComponent, NgxEditorJsBlockWithComponent } from '../ngx-editor-js2.interface';
-// import { HeaderBlockComponent } from '../components/blocks/header-block.component';
-// import { ParagraphBlockComponent } from '../components/blocks/paragraph-block.component';
-// import { FormControl } from '@angular/forms';
-// import { ComponentRef } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import {
+  NgxEditorJs2Service,
+  NGX_EDITORJS_OPTIONS,
+} from './ngx-editor-js2.service';
+import { EditorJsService } from './editor-js.service';
+import { SupportedBlock, NgxEditorJsBlock } from '../ngx-editor-js2.interface';
+import { ParagraphBlockComponent } from '../components/blocks/paragraph-block.component';
+import { HeaderBlockComponent } from '../components/blocks/header-block.component';
+import { of } from 'rxjs';
 
-// describe('NgxEditorJs2Service', () => {
-//   let service: NgxEditorJs2Service;
-//   let editorJsServiceSpy: jasmine.SpyObj<EditorJsService>;
+describe('NgxEditorJs2Service', () => {
+  let service: NgxEditorJs2Service;
+  let editorJsServiceMock: jest.Mocked<EditorJsService>;
 
-//   beforeEach(() => {
-//     // Mock the EditorJsService
-//     const editorJsSpy = jasmine.createSpyObj('EditorJsService', ['clearBlocks', 'addBlockComponent']);
+  beforeEach(() => {
+    editorJsServiceMock = {
+      clearBlocks: jest.fn().mockReturnValue(of(null)),
+      addBlockComponent: jest.fn().mockImplementation((block) => of(block)),
+    } as unknown as jest.Mocked<EditorJsService>;
 
-//     TestBed.configureTestingModule({
-//       providers: [
-//         NgxEditorJs2Service,
-//         { provide: EditorJsService, useValue: editorJsSpy },
-//         {
-//           provide: NGX_EDITORJS_OPTIONS,
-//           useValue: { consumerSupportedBlocks: [] },
-//         },
-//       ],
-//     });
+    TestBed.configureTestingModule({
+      providers: [
+        NgxEditorJs2Service,
+        { provide: EditorJsService, useValue: editorJsServiceMock },
+        {
+          provide: NGX_EDITORJS_OPTIONS,
+          useValue: { consumerSupportedBlocks: [] },
+        },
+      ],
+    });
 
-//     service = TestBed.inject(NgxEditorJs2Service);
-//     editorJsServiceSpy = TestBed.inject(EditorJsService) as jasmine.SpyObj<EditorJsService>;
+    service = TestBed.inject(NgxEditorJs2Service);
+  });
 
-//     // Mock Observables
-//     editorJsServiceSpy.clearBlocks.and.returnValue(of(null));
-//     editorJsServiceSpy.addBlockComponent.and.returnValue(of([new FormControl<string | null>(null), {} as ComponentRef<BlockComponent>, {}]));
-//   });
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 
-//   it('should be created', () => {
-//     expect(service).toBeTruthy();
-//   });
+  it('should initialize with default internal supported blocks', (done) => {
+    service.supportedBlocks$.subscribe((blocks) => {
+      expect(blocks).toEqual([
+        {
+          name: 'Paragraph',
+          component: ParagraphBlockComponent,
+          componentInstanceName: 'ParagraphBlockComponent',
+        },
+        {
+          name: 'Header',
+          component: HeaderBlockComponent,
+          componentInstanceName: 'HeaderBlockComponent',
+        },
+      ]);
+      done();
+    });
+  });
 
-//   it('should initialize with default supported blocks', (done) => {
-//     service.supportedBlocks$.subscribe((blocks) => {
-//       expect(blocks.length).toBe(2);
-//       expect(blocks.some((b) => b.name === 'Paragraph')).toBeTrue();
-//       expect(blocks.some((b) => b.name === 'Header')).toBeTrue();
-//       done();
-//     });
-//   });
+  it('should load default blocks when no blocks are provided', () => {
+    const result = service.determineToloadDefaultBlocks([]);
+    expect(result).toEqual([
+      {
+        blockId: 'tmdjr',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: "Let's get started... 🚀",
+        savedAction: 'h1',
+      },
+    ]);
+  });
 
-//   it('should load default blocks when no blocks are provided', () => {
-//     const result = service.determineToloadDefaultBlocks([]);
-//     expect(result.length).toBe(1);
-//     expect(result[0].componentInstanceName).toBe('HeaderBlockComponent');
-//   });
+  it('should remove duplicate blocks by blockId', () => {
+    const blocks: NgxEditorJsBlock[] = [
+      {
+        blockId: '1',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: '',
+      },
+      {
+        blockId: '2',
+        sortIndex: 1,
+        componentInstanceName: 'ParagraphBlockComponent',
+        dataClean: '',
+      },
+    ];
 
-//   it('should remove duplicate blocks with the same ID', () => {
-//     const blocks: NgxEditorJsBlockWithComponent[] = [
-//       { blockId: '1', sortIndex: 0, componentInstanceName: 'HeaderBlockComponent', dataClean: '', savedAction: '', component: HeaderBlockComponent },
-//       { blockId: '1', sortIndex: 1, componentInstanceName: 'HeaderBlockComponent', dataClean: '', savedAction: '', component: HeaderBlockComponent },
-//     ];
+    const uniqueBlocks = service.removeDuplicateBlocksWithSameIds(blocks);
+    expect(uniqueBlocks.length).toBe(2);
+    expect(uniqueBlocks).toEqual([
+      {
+        blockId: '1',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: '',
+      },
+      {
+        blockId: '2',
+        sortIndex: 1,
+        componentInstanceName: 'ParagraphBlockComponent',
+        dataClean: '',
+      },
+    ]);
+  });
 
-//     const result = service.removeDuplicateBlocksWithSameIds(blocks);
-//     expect(result.length).toBe(1);
-//   });
+  it('should sort blocks by sortIndex', () => {
+    const blocks: NgxEditorJsBlock[] = [
+      {
+        blockId: '2',
+        sortIndex: 2,
+        componentInstanceName: 'ParagraphBlockComponent',
+        dataClean: '',
+      },
+      {
+        blockId: '1',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: '',
+      },
+      {
+        blockId: '3',
+        sortIndex: 1,
+        componentInstanceName: 'ParagraphBlockComponent',
+        dataClean: '',
+      },
+    ];
 
-//   it('should sort blocks by sortIndex', () => {
-//     const blocks: NgxEditorJsBlock[] = [
-//       { blockId: '2', sortIndex: 2, componentInstanceName: 'HeaderBlockComponent', dataClean: '', savedAction: '' },
-//       { blockId: '1', sortIndex: 0, componentInstanceName: 'ParagraphBlockComponent', dataClean: '', savedAction: '' },
-//       { blockId: '3', sortIndex: 1, componentInstanceName: 'HeaderBlockComponent', dataClean: '', savedAction: '' },
-//     ];
+    const sortedBlocks = service.sortBlocks(blocks);
+    expect(sortedBlocks).toEqual([
+      {
+        blockId: '1',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: '',
+      },
+      {
+        blockId: '3',
+        sortIndex: 1,
+        componentInstanceName: 'ParagraphBlockComponent',
+        dataClean: '',
+      },
+      {
+        blockId: '2',
+        sortIndex: 2,
+        componentInstanceName: 'ParagraphBlockComponent',
+        dataClean: '',
+      },
+    ]);
+  });
 
-//     const result = service.sortBlocks(blocks);
-//     expect(result[0].blockId).toBe('1');
-//     expect(result[1].blockId).toBe('3');
-//     expect(result[2].blockId).toBe('2');
-//   });
+  it('should create a lookup map for supported blocks', () => {
+    const blocks: NgxEditorJsBlock[] = [
+      {
+        blockId: '1',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: '',
+      },
+    ];
 
-//   it('should merge internal and consumer-supported blocks', (done) => {
-//     service.consumerSupportedBlocks.next([
-//       { name: 'CustomBlock', componentInstanceName: 'CustomBlockComponent', component: HeaderBlockComponent },
-//     ]);
+    const supportedBlocks: SupportedBlock[] = [
+      {
+        name: 'Header',
+        componentInstanceName: 'HeaderBlockComponent',
+        component: HeaderBlockComponent,
+      },
+    ];
 
-//     service.supportedBlocks$.subscribe((blocks) => {
-//       expect(blocks.length).toBe(3);
-//       expect(blocks.some((b) => b.name === 'CustomBlock')).toBeTrue();
-//       done();
-//     });
-//   });
+    const { blocks: resultBlocks, supportedBlocksMap } =
+      service.createALookupMapForSupportedBlocks(blocks, supportedBlocks);
 
-//   it('should create a lookup map for supported blocks', () => {
-//     const supportedBlocks: SupportedBlock[] = [
-//       { name: 'Paragraph', componentInstanceName: 'ParagraphBlockComponent', component: ParagraphBlockComponent },
-//       { name: 'Header', componentInstanceName: 'HeaderBlockComponent', component: HeaderBlockComponent },
-//     ];
+    expect(resultBlocks).toEqual(blocks);
+    expect(supportedBlocksMap.get('HeaderBlockComponent')).toBe(
+      HeaderBlockComponent
+    );
+  });
 
-//     const result = service.createALookupMapForSupportedBlocks([], supportedBlocks);
-//     expect(result.supportedBlocksMap.has('ParagraphBlockComponent')).toBeTrue();
-//     expect(result.supportedBlocksMap.has('HeaderBlockComponent')).toBeTrue();
-//   });
+  it('should find and marshal block components correctly', () => {
+    const blocks: NgxEditorJsBlock[] = [
+      {
+        blockId: '1',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: '',
+      },
+      {
+        blockId: '2',
+        sortIndex: 1,
+        componentInstanceName: 'UnknownComponent',
+        dataClean: '',
+      },
+    ];
 
-//   it('should find and assign components to blocks', () => {
-//     const blocks: NgxEditorJsBlock[] = [
-//       { blockId: '1', sortIndex: 0, componentInstanceName: 'HeaderBlockComponent', dataClean: '', savedAction: '' },
-//     ];
+    const supportedBlocksMap = new Map<string, any>([
+      ['HeaderBlockComponent', HeaderBlockComponent],
+    ]);
 
-//     const supportedBlocksMap = new Map<string, any>();
-//     supportedBlocksMap.set('HeaderBlockComponent', HeaderBlockComponent);
+    const marshalledBlocks = service.findAndMarshalBlocksComponent(
+      blocks,
+      supportedBlocksMap
+    );
 
-//     const result = service.findAndMarshalBlocksComponent(blocks, supportedBlocksMap);
-//     expect(result[0].component).toBe(HeaderBlockComponent);
-//   });
+    expect(marshalledBlocks[0].component).toBe(HeaderBlockComponent);
+    expect(marshalledBlocks[1].component).toBe(HeaderBlockComponent); // Fallback to default
+  });
 
-//   it('should clear blocks from EditorJsService', (done) => {
-//     service.clearBlocksFromEditorJs([]).subscribe(() => {
-//       expect(editorJsServiceSpy.clearBlocks).toHaveBeenCalled();
-//       done();
-//     });
-//   });
+  it('should call addBlockComponent for each block', (done) => {
+    const blocks = [
+      {
+        blockId: '1',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: '',
+        component: HeaderBlockComponent,
+      },
+    ];
 
-//   it('should add blocks to EditorJsService', (done) => {
-//     const blocks: NgxEditorJsBlockWithComponent[] = [
-//       { blockId: '1', sortIndex: 0, componentInstanceName: 'HeaderBlockComponent', dataClean: '', savedAction: '' },
-//     ].map((block) => ({
-//       ...block,
-//       component: HeaderBlockComponent,
-//     }));
+    service.addBlocksToEditorJs(blocks).subscribe(() => {
+      expect(editorJsServiceMock.addBlockComponent).toHaveBeenCalledTimes(1);
+      done();
+    });
+  });
 
-//     service.addBlocksToEditorJs(blocks).subscribe(() => {
-//       expect(editorJsServiceSpy.addBlockComponent).toHaveBeenCalledTimes(1);
-//       done();
-//     });
-//   });
-// });
+  it('should clear blocks from EditorJs before loading', (done) => {
+    const blocks = [
+      {
+        blockId: '1',
+        sortIndex: 0,
+        componentInstanceName: 'HeaderBlockComponent',
+        dataClean: '',
+      },
+    ];
+
+    service.clearBlocksFromEditorJs(blocks).subscribe(([clearedBlocks]) => {
+      expect(clearedBlocks).toEqual(blocks);
+      expect(editorJsServiceMock.clearBlocks).toHaveBeenCalledTimes(1);
+      done();
+    });
+  });
+});
