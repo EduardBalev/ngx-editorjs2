@@ -69,7 +69,9 @@ export class NgxEditorJs2Service {
     map(({ blocks, supportedBlocksMap }) =>
       this.findAndMarshalBlocksComponent(blocks, supportedBlocksMap)
     ),
-    mergeMap((blocks) => this.addBlocksToEditorJs(blocks))
+    mergeMap((blocks) =>
+      this.addBlocksToEditorJs(blocks).pipe(map(() => blocks))
+    )
   );
 
   clearBlocksFromEditorJs(blocks: NgxEditorJsBlock[]) {
