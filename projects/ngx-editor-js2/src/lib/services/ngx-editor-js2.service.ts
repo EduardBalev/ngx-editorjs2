@@ -1,4 +1,4 @@
-import { inject, Injectable, InjectionToken } from '@angular/core';
+import { inject, Injectable, InjectionToken, Type } from '@angular/core';
 import { HeaderBlockComponent } from '../components/blocks/header-block.component';
 import { ParagraphBlockComponent } from '../components/blocks/paragraph-block.component';
 import {
@@ -11,7 +11,6 @@ import {
   mergeMap,
   of,
   switchMap,
-  tap,
 } from 'rxjs';
 import { EditorJsService } from './editor-js.service';
 import {
@@ -19,6 +18,7 @@ import {
   NgxEditorJsBlock,
   NgxEditorJsBlockWithComponent,
   SupportedBlock,
+  BlockComponent,
 } from '../ngx-editor-js2.interface';
 
 export const NGX_EDITORJS_OPTIONS = new InjectionToken<NgxEditorjsOptions>(
@@ -57,45 +57,28 @@ export class NgxEditorJs2Service {
   blocksToLoad = new BehaviorSubject<NgxEditorJsBlock[]>([]);
 
   loadBlocks$ = this.blocksToLoad.asObservable().pipe(
-    // distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
-    // The NgxEditorJs2Component loads the editor-js component after the blocks are loaded
-    // So the ViewContainerRef is not available at the time of loading the blocks
-    // Wait until next frame to load the blocks
     delay(0),
-    exhaustMap((blocks) =>
-      forkJoin([of(blocks), this.editorJsService.clearBlocks()])
+    exhaustMap((blocks) => this.clearBlocksFromEditorJs(blocks)),
+    map(([blocks]) => this.determineToloadDefaultBlocks(blocks)),
+    map((blocks) => this.removeDuplicateBlocksWithSameIds(blocks)),
+    map((blocks) => this.sortBlocks(blocks)),
+    switchMap((blocks) => this.combineSupportBlocks(blocks)),
+    map(([blocks, supportedBlocks]) =>
+      this.createALookupMapForSupportedBlocks(blocks, supportedBlocks)
     ),
-    map(([blocks]) => (blocks.length > 0 ? blocks : this.loadDefaultBlocks())),
-    // tap((blocks) => console.log('Blocks to load', blocks)),
-    map((blocks) =>
-      Array.from(
-        new Map(blocks.map((block) => [block.blockId, block])).values()
-      )
-    ),
-    map((blocks) => blocks.sort((a, b) => a.sortIndex - b.sortIndex)),
-    switchMap((blocks) => combineLatest([of(blocks), this.supportedBlocks$])),
-    map(([blocks, supportedBlocks]) => ({
-      blocks,
-      supportedBlocksMap: new Map(
-        supportedBlocks.map((sb) => [sb.componentInstanceName, sb.component])
-      ),
-    })),
     map(({ blocks, supportedBlocksMap }) =>
-      blocks.map((block) => ({
-        ...block,
-        component:
-          supportedBlocksMap.get(block.componentInstanceName) ??
-          HeaderBlockComponent,
-      }))
+      this.findAndMarshalBlocksComponent(blocks, supportedBlocksMap)
     ),
-    mergeMap((blocks) =>
-      combineLatest(
-        blocks.map((block: NgxEditorJsBlockWithComponent) =>
-          this.editorJsService.addBlockComponent(block)
-        )
-      )
-    )
+    mergeMap((blocks) => this.addBlocksToEditorJs(blocks))
   );
+
+  clearBlocksFromEditorJs(blocks: NgxEditorJsBlock[]) {
+    return forkJoin([of(blocks), this.editorJsService.clearBlocks()]);
+  }
+
+  determineToloadDefaultBlocks(blocks: NgxEditorJsBlock[]) {
+    return blocks.length > 0 ? blocks : this.loadDefaultBlocks();
+  }
 
   loadDefaultBlocks() {
     return [
@@ -107,5 +90,51 @@ export class NgxEditorJs2Service {
         savedAction: 'h1',
       },
     ];
+  }
+
+  removeDuplicateBlocksWithSameIds(blocks: NgxEditorJsBlock[]) {
+    return Array.from(
+      new Map(blocks.map((block) => [block.blockId, block])).values()
+    );
+  }
+
+  sortBlocks(blocks: NgxEditorJsBlock[]) {
+    return blocks.sort((a, b) => a.sortIndex - b.sortIndex);
+  }
+
+  combineSupportBlocks(blocks: NgxEditorJsBlock[]) {
+    return combineLatest([of(blocks), this.supportedBlocks$]);
+  }
+
+  createALookupMapForSupportedBlocks(
+    blocks: NgxEditorJsBlock[],
+    supportedBlocks: SupportedBlock[]
+  ) {
+    return {
+      blocks,
+      supportedBlocksMap: new Map(
+        supportedBlocks.map((sb) => [sb.componentInstanceName, sb.component])
+      ),
+    };
+  }
+
+  findAndMarshalBlocksComponent(
+    blocks: NgxEditorJsBlock[],
+    supportedBlocksMap: Map<string, Type<BlockComponent>>
+  ) {
+    return blocks.map((block) => ({
+      ...block,
+      component:
+        supportedBlocksMap.get(block.componentInstanceName) ??
+        HeaderBlockComponent,
+    }));
+  }
+
+  addBlocksToEditorJs(blocks: NgxEditorJsBlockWithComponent[]) {
+    return combineLatest(
+      blocks.map((block: NgxEditorJsBlockWithComponent) =>
+        this.editorJsService.addBlockComponent(block)
+      )
+    );
   }
 }
