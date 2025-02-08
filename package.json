@@ -8,7 +8,8 @@
     "watch-demo": "ng serve",
     "watch-ngx-editor-js2": "ng build ngx-editor-js2 --watch --configuration development",
     "watch-ngx-editor-js2-image": "ng build ngx-editor-js2-image --watch --configuration development",
-    "test": "ng test",
+    "test": "ng test ngx-editor-js2 --coverage",
+    "test-jest": "jest",
     "deployDemo": "npx angular-cli-ghpages --dir=dist/ngx-editorjs2-demo/browser"
   },
   "private": true,
@@ -36,6 +37,7 @@
     "@types/jest": "^29.5.14",
     "jest": "^29.7.0",
     "jest-preset-angular": "^14.5.1",
+    "ng-mocks": "^14.13.2",
     "ng-packagr": "^19.1.0",
     "ts-jest": "^29.2.5",
     "typescript": "~5.6.2"
