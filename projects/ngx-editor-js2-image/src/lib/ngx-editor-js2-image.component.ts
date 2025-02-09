@@ -114,6 +114,7 @@ type Value = { url: string; title: string };
 })
 export class NgxEditorJs2ImageComponent implements BlockComponent {
   sortIndex = input<number>(0);
+  componentInstanceName = 'NgxEditorJs2ImageComponent';
   autofocus = input<boolean>(true);
   formGroup = input.required<FormGroup>();
   formControlName = input.required<string>();

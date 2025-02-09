@@ -66,6 +66,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 })
 export class ParagraphBlockComponent implements BlockComponent {
   sortIndex = input<number>(0);
+  componentInstanceName = 'ParagraphBlockComponent';
   autofocus = input<boolean>(true);
   formGroup = input.required<FormGroup>();
   formControlName = input.required<string>();

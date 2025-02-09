@@ -1,6 +1,6 @@
 {
   "name": "@tmdjr/ngx-editor-js2",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "peerDependencies": {
     "@angular/animations": "^19.0.0",
     "@angular/cdk": "^19.1.0",

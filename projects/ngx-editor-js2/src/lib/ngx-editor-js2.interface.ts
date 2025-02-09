@@ -25,6 +25,7 @@ export interface NgxEditorJsBlockWithComponent extends NgxEditorJsBlock {
 
 export interface BlockComponent {
   sortIndex: InputSignal<number>;
+  componentInstanceName: string;
   formControlName: InputSignal<string>;
   formGroup: InputSignal<FormGroup>;
   blockOptionActions: InputSignal<BlockOptionAction[]>;

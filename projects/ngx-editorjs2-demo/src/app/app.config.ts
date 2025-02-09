@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { NGX_EDITORJS_OPTIONS } from '@tmdjr/ngx-editor-js2';
-import { NgxEditorJs2ImageComponent } from 'ngx-editor-js2-image';
+import { NgxEditorJs2ImageComponent } from '@tmdjr/ngx-editor-js2-image';
 
 export const appConfig: ApplicationConfig = {
   providers: [

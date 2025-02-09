@@ -48,7 +48,7 @@ export class EditorJsService {
             componentRefs.map<NgxEditorJsBlock>(({ instance }) => ({
               blockId: instance.formControlName(),
               sortIndex: instance.sortIndex(),
-              componentInstanceName: instance.constructor.name.slice(1),
+              componentInstanceName: instance.componentInstanceName,
               savedAction: instance.savedAction(),
               dataClean: instance.formGroup().get(instance.formControlName())
                 ?.value,

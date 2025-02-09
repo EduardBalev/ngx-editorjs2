@@ -99,6 +99,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 })
 export class HeaderBlockComponent implements BlockComponent {
   sortIndex = input<number>(0);
+  componentInstanceName = 'HeaderBlockComponent';
   autofocus = input<boolean>(true);
   formGroup = input.required<FormGroup>();
   formControlName = input.required<string>();
