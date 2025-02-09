@@ -1,4 +1,4 @@
-import { InjectionToken, InputSignal, Type } from '@angular/core';
+import { InjectionToken, InputSignal, Signal, Type } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -28,6 +28,7 @@ export interface BlockComponent {
   formControlName: InputSignal<string>;
   formGroup: InputSignal<FormGroup>;
   blockOptionActions: InputSignal<BlockOptionAction[]>;
+  savedAction: Signal<string>;
   actionCallback?: (string: string) => void;
 }
 

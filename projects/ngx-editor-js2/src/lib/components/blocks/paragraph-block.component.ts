@@ -27,7 +27,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
         controlAccessor
         contentEditable
         toolbarFab
-        [ngClass]="className()"
+        [ngClass]="savedAction()"
         [defaultValue]="formGroup().get(formControlName())?.value"
         [actionCallback]="actionCallbackBind"
         [autofocus]="autofocus()"
@@ -78,10 +78,10 @@ export class ParagraphBlockComponent implements BlockComponent {
     { action: 'title-large', text: 'TL' },
   ]);
 
-  className = signal<string>('medium');
+  savedAction = signal<string>('medium');
   actionCallbackBind = this.actionCallback.bind(this);
 
   actionCallback(action: string) {
-    this.className.update(() => action);
+    this.savedAction.update(() => action);
   }
 }

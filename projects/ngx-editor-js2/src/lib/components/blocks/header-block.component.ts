@@ -26,7 +26,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     NgTemplateOutlet,
   ],
   template: `
-    <ng-container [ngSwitch]="selectedHeaderTag()">
+    <ng-container [ngSwitch]="savedAction()">
       <h1 *ngSwitchCase="'h1'">
         <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
       </h1>
@@ -111,10 +111,10 @@ export class HeaderBlockComponent implements BlockComponent {
     { action: 'h6', text: 'H6' },
   ]);
 
-  selectedHeaderTag = signal<string>('h1');
+  savedAction = signal<string>('h1');
   actionCallbackBind = this.actionCallback.bind(this);
 
   actionCallback(selectedAction: string) {
-    this.selectedHeaderTag.set(selectedAction);
+    this.savedAction.set(selectedAction);
   }
 }

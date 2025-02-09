@@ -4,6 +4,7 @@ import { MatFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
+  AutofocusDirective,
   BlockComponent,
   BlockOptionAction,
   ControlAccessorDirective,
@@ -21,6 +22,7 @@ type Value = { url: string; title: string };
   imports: [
     ReactiveFormsModule,
     ControlAccessorDirective,
+    AutofocusDirective,
     ToolbarFabDirective,
     ImageConfigComponent,
     MatFabButton,
@@ -40,7 +42,7 @@ type Value = { url: string; title: string };
         [formControlName]="formControlName()"
         [componentContextPositionIndex]="sortIndex()"
       ></span>
-      <div class="image-container" [ngClass]="activeImageClass()">
+      <div class="image-container" [ngClass]="savedAction()">
         <img
           class="image-block"
           [src]="value().url"
@@ -123,7 +125,7 @@ export class NgxEditorJs2ImageComponent implements BlockComponent {
   ]);
 
   value = signal<Value>({ url: '', title: '' });
-  activeImageClass = signal<string>('flex-start');
+  savedAction = signal<string>('flex-start');
   actionCallbackBind = this.actionCallback.bind(this);
 
   openOverlay = signal<boolean>(true);
@@ -142,7 +144,7 @@ export class NgxEditorJs2ImageComponent implements BlockComponent {
   }
 
   actionCallback(action: string) {
-    this.activeImageClass.update(() => action);
+    this.savedAction.update(() => action);
   }
 
   openEditUrlOverlay() {

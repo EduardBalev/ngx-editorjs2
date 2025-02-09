@@ -49,6 +49,7 @@ export class EditorJsService {
               blockId: instance.formControlName(),
               sortIndex: instance.sortIndex(),
               componentInstanceName: instance.constructor.name.slice(1),
+              savedAction: instance.savedAction(),
               dataClean: instance.formGroup().get(instance.formControlName())
                 ?.value,
             }))
