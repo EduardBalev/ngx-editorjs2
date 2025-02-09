@@ -4,10 +4,8 @@ import { AsyncPipe } from '@angular/common';
 import {
   combineLatest,
   debounceTime,
-  defaultIfEmpty,
   fromEvent,
   Observable,
-  startWith,
   switchMap,
 } from 'rxjs';
 import { ToolFabService } from './services/tool-fab.service';

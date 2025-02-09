@@ -1,15 +1,15 @@
 import {
   ApplicationConfig,
-  provideExperimentalZonelessChangeDetection,
+  // provideExperimentalZonelessChangeDetection,
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { NGX_EDITORJS_OPTIONS } from 'ngx-editor-js2';
+import { NGX_EDITORJS_OPTIONS } from '@tmdjr/ngx-editor-js2';
 import { NgxEditorJs2ImageComponent } from 'ngx-editor-js2-image';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimationsAsync(),
-    provideExperimentalZonelessChangeDetection(),
+    // provideExperimentalZonelessChangeDetection(),
     {
       provide: NGX_EDITORJS_OPTIONS,
       useValue: {

@@ -12,7 +12,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'paragraph-block',
-  host: { class: 'position-relative block cdk-drag-animating' },
+  host: { class: 'cdk-drag-animating' },
   hostDirectives: [CdkDrag],
   imports: [
     ReactiveFormsModule,
@@ -40,6 +40,8 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
   styles: [
     `
       :host {
+        display: block;
+        position: relative;
         .small {
           font: var(--mat-sys-body-small);
         }

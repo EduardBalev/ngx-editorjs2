@@ -8,7 +8,7 @@ import {
   BlockOptionAction,
   ControlAccessorDirective,
   ToolbarFabDirective,
-} from 'ngx-editor-js2';
+} from '@tmdjr/ngx-editor-js2';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { ImageConfigComponent } from './image-config/image-config.component';
 
@@ -66,6 +66,7 @@ type Value = { url: string; title: string };
   styles: [
     `
       :host {
+        position: relative;
         display: flex;
         flex-direction: column;
         margin-bottom: 22px;

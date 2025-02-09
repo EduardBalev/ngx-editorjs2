@@ -125,15 +125,8 @@ body {
   }
 }
 
-.position-relative {
-  position: relative;
-}
-.block {
-  display: block;
-}
-
-
 // TODO Clean this shit up
+// ! Needs to be a part of Library
 .cdk-drag-preview {
   color: var(--mat-sys-on-secondary-container);
   background-color: var(--mat-sys-secondary-container);
