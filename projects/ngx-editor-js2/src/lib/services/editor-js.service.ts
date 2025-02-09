@@ -55,12 +55,10 @@ export class EditorJsService {
           ),
           map((blocks) => blocks.sort((a, b) => a.sortIndex - b.sortIndex))
         )
-      )
-        .then((blocks) => {
-          observer.next(blocks);
-          observer.complete();
-        })
-        .catch((error) => observer.error(error));
+      ).then((blocks) => {
+        observer.next(blocks);
+        observer.complete();
+      });
     });
   }
 
@@ -80,12 +78,14 @@ export class EditorJsService {
     });
   }
 
-  addBlockComponent(ngxEditorJsBlock: NgxEditorJsBlockWithComponent) {
+  addBlockComponent(
+    ngxEditorJsBlock: NgxEditorJsBlockWithComponent
+  ): Observable<void> {
     return forkJoin([
       this.createFormGroupControl(ngxEditorJsBlock),
       this.attachComponent(ngxEditorJsBlock),
       this.blockMovementService.updateComponentIndices(this.ngxEditor),
-    ]);
+    ]).pipe(map(() => void 0));
   }
 
   createFormGroupControl({
@@ -189,8 +189,8 @@ export class EditorJsService {
         this.blockMovementService.updateComponentIndices(this.ngxEditor)
       ),
       tap(() => {
-        this.blockMovementService.clearComponentRefs()
-        this.ngxEditor.clear()
+        this.blockMovementService.clearComponentRefs();
+        this.ngxEditor.clear();
       }),
       defaultIfEmpty(false)
     );
