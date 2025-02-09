@@ -12,7 +12,7 @@
     "test-jest": "jest",
     "deployDemo": "npx angular-cli-ghpages --dir=dist/ngx-editorjs2-demo/browser"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "^19.0.0",
     "@angular/cdk": "^19.1.0",
