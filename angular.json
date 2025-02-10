@@ -126,39 +126,6 @@
           }
         }
       }
-    },
-    "ngx-editor-js2-image": {
-      "projectType": "library",
-      "root": "projects/ngx-editor-js2-image",
-      "sourceRoot": "projects/ngx-editor-js2-image/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:ng-packagr",
-          "options": {
-            "project": "projects/ngx-editor-js2-image/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/ngx-editor-js2-image/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/ngx-editor-js2-image/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular-builders/jest:run",
-          "options": {
-            "tsConfig": "tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
-          }
-        }
-      }
     }
   },
   "cli": {

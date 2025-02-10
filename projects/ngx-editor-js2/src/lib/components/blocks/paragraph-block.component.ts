@@ -3,12 +3,14 @@ import { ControlAccessorDirective } from '../../directives/control-accessor.dire
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AutofocusDirective } from '../../directives/autofocus.directive';
 import { ToolbarFabDirective } from '../../directives/toolbar-fab.directive';
+import { CleanPasteDataDirective } from '../../directives/clean-paste-data.directive';
 import {
   BlockComponent,
   BlockOptionAction,
 } from '../../ngx-editor-js2.interface';
 import { NgClass } from '@angular/common';
 import { CdkDrag } from '@angular/cdk/drag-drop';
+
 
 @Component({
   selector: 'paragraph-block',
@@ -19,6 +21,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     ControlAccessorDirective,
     AutofocusDirective,
     ToolbarFabDirective,
+    CleanPasteDataDirective,
     NgClass,
   ],
   template: `
@@ -27,6 +30,7 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
         controlAccessor
         contentEditable
         toolbarFab
+        cleanPasteData
         [ngClass]="savedAction()"
         [defaultValue]="formGroup().get(formControlName())?.value"
         [actionCallback]="actionCallbackBind"

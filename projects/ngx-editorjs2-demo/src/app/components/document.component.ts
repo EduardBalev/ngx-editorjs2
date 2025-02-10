@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatCard, MatCardContent } from '@angular/material/card';
-import { NgxEditorJs2Component } from '@tmdjr/ngx-editor-js2';
+import { NgxEditorJs2Component } from 'ngx-editor-js2';
 import { AppService } from '../services/app.service';
 import { AsyncPipe } from '@angular/common';
 
