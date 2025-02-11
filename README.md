@@ -20,7 +20,7 @@ Ngx-EditorJs2 is an Angular-based, highly extensible block-style editor inspired
 To install Ngx-EditorJs2, run:
 
 ```sh
-npm install @tmdjr/ngx-editorjs2
+npm install @tmdjr/ngx-editor-js2
 ```
 
 ## Usage
