@@ -1,6 +1,6 @@
 {
   "name": "ngx-editorjs2-demo",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "scripts": {
     "build-demo": "ng build ngx-editorjs2-demo --configuration production --base-href \"/ngx-editorjs2/\"",
     "build-ngx-editor-js2": "ng build ngx-editor-js2 --configuration production",

@@ -35,7 +35,13 @@ export class ToolbarInlineService {
   }
 
   isSelectionInABlock(target: HTMLElement | null) {
-    return !!target && target.closest('ngx-editor-js2') !== null;
+    // ! TODO: This is a hacky way to determine if the selection is in a block
+    // ! Need to also check if the block wants to display the inline toolbar
+    return (
+      !!target &&
+      (target.closest('.no-toolbar-inline') !== null ? false :
+        target.closest('ngx-editor-js2') !== null ? true : false)
+    );
   }
 
   attachInlineToolbar(selection: Selection) {

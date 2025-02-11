@@ -20,7 +20,7 @@ Ngx-EditorJs2 is an Angular-based, highly extensible block-style editor inspired
 To install Ngx-EditorJs2, run:
 
 ```sh
-npm install @tmdjr/ngx-editorjs2
+npm install @tmdjr/ngx-editor-js2
 ```
 
 ## Usage
@@ -41,7 +41,7 @@ import { NgxEditorJs2Component } from '@tmdjr/ngx-editor-js2';
   `,
 })
 ```
-- Implementation found in the [Demo Src](https://github.com/Ba5ik7/ngx-editorjs2/blob/main/projects/ngx-editorjs2-demo/src/app/components/document.component.ts#L9)
+- Implementation found in the [Demo Src](https://github.com/Ba5ik7/ngx-editor-js2-blocks/blob/main/projects/demo/src/app/app.component.ts)
 
 Css is required for the editor to function properly. Add the following to your global styles:
 
@@ -91,10 +91,6 @@ Ngx-EditorJs2 comes with built-in block components:
 
 You can also add custom blocks by implementing the `NGX_EDITORJS_OPTIONS` provider:
 
-```sh
-npm install @tmdjr/ngx-editor-js2-image
-```
-
 ```ts
 import { NGX_EDITORJS_OPTIONS } from '@tmdjr/ngx-editor-js2';
 import { NgxEditorJs2ImageComponent } from '@tmdjr/ngx-editor-js2-image';
@@ -119,6 +115,50 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
+## 📦 Custom Blocks for Ngx-EditorJs2
+
+Ngx-EditorJs2 allows you to extend its functionality with custom blocks. Below are some additional components that can be installed separately to enhance the editor with images, blockquotes, and code blocks.
+
+### 🖼️ Image Block
+Easily add and manage images within the editor.
+
+- **Component:** `NgxEditorJs2ImageComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-image
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-image](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-image)
+
+---
+
+### 📝 Blockquotes Block
+Insert styled blockquotes to emphasize key points in the content.
+
+- **Component:** `NgxEditorJs2BlockquotesComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-blockquotes
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-blockquotes](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-blockquotes)
+
+---
+
+### 💻 Code Block
+Embed syntax-highlighted code snippets using CodeMirror.
+
+- **Component:** `NgxEditorJs2CodemirrorComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-codemirror
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-codemirror](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-codemirror)
+
+---
+
+For more details and documentation, visit the official repository.
+
+
+
 ## Development
 To contribute, clone the repository and install dependencies:
 
@@ -134,28 +174,16 @@ Build the library:
 npm run build-ngx-editor-js2
 ```
 
-Build Customs Blocks:
-
-```sh
-npm run build-ngx-editor-js2-image
-// etc...
-```
-
 Run the development server:
-
-```sh
-npm run start-demo
-```
-
 If you want to live reload the library, run the following commands in succession:
 
 ```sh
 npm run watch-ngx-editor-js2 // Important to run 1st
-npm run watch-ngx-editor-js2-image
-// etc...
-
 npm run start-demo
 ```
+
+*Custom Block development should be done in the [Ngx-Editor-Js2-Blocks](https://github.com/Ba5ik7/ngx-editor-js2-blocks) MonoRepo.*
+
 
 ## Architecture Overview
 Ngx-EditorJs2 is built on Angular's reactive architecture, using RxJS to manage state and data streams. The library is composed of several Services and Directives that handle different aspects of the editor:
@@ -195,6 +223,8 @@ Each block in Ngx-EditorJs2 is part of a larger **`formGroup`**, allowing seamle
 - Each block maintains its own **FormControl**, enabling real-time data binding.
 - The **editor-level formGroup** acts as a centralized store, making it easier to retrieve or modify block data.
 - Blocks can **interact with services and directives**, enhancing their capabilities dynamically.
+
+*Custom Block development should be done in the [Ngx-Editor-Js2-Blocks](https://github.com/Ba5ik7/ngx-editor-js2-blocks) MonoRepo.*
 
 ## License
 MIT License © 2025 [Wesley DuSell](https://github.com/ba5ik7)
