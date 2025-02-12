@@ -12,12 +12,12 @@ export class ToolbarInlineService {
   overlayRef!: OverlayRef;
 
   determineToDisplayInlineToolbarBlock(_event: Event) {
-    this.overlayRef?.hasAttached() && this.overlayRef.dispose(); // So hacky
     return of(window.getSelection()).pipe(
       filter((selection) => selection !== null),
       filter((selection) => selection.rangeCount > 0),
       filter((selection) => selection.toString().length > 0),
       filter((selection) => selection.toString() !== ''),
+      tap(() => this.overlayRef?.hasAttached() && this.overlayRef.dispose()), // So hacky tired to do this properly
       map((selection) => ({
         selection,
         parant: this.getSelectionParent(selection),
@@ -39,8 +39,11 @@ export class ToolbarInlineService {
     // ! Need to also check if the block wants to display the inline toolbar
     return (
       !!target &&
-      (target.closest('.no-toolbar-inline') !== null ? false :
-        target.closest('ngx-editor-js2') !== null ? true : false)
+      (target.closest('.no-toolbar-inline') !== null
+        ? false
+        : target.closest('ngx-editor-js2') !== null
+        ? true
+        : false)
     );
   }
 
@@ -48,20 +51,21 @@ export class ToolbarInlineService {
     return of(selection.getRangeAt(0)).pipe(
       map((range) => range.getBoundingClientRect()),
       map((selectionRect) => this.createOverlay(selectionRect)),
+      // So hacky tired to do this properly
+      // passing the refs down the pipe adds a bug
+      // user selects text with a drag
+      // (mousedown → mousemove → wait → mousemove → mouseup)
       tap((overlayRef) => (this.overlayRef = overlayRef)),
       map((overlayRef) => {
-        // To tired to do this properly right now
-        // passing the refs down the pipe adds a bug
-        // user selects text with a drag
-        // (mousedown → mousemove → wait → mousemove → mouseup)
-        const { instance: inlineToolbar } = overlayRef.attach(
+        const inlineToolbar = overlayRef.attach(
           new ComponentPortal(ToolbarInlineComponent)
         );
-        inlineToolbar.selection = selection;
+        inlineToolbar.setInput('selection', selection);
+
         lastValueFrom(
           merge(
             overlayRef.backdropClick(),
-            inlineToolbar.closeInlineToobarOverlayEmitter
+            inlineToolbar.instance.closeOverlayEmitter
           ).pipe(
             tap(() => overlayRef.dispose()),
             tap(() => selection.removeAllRanges())
