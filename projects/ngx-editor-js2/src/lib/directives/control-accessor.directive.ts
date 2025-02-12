@@ -27,7 +27,8 @@ export class ControlAccessorDirective implements ControlValueAccessor {
   onTouched: () => void = () => {};
 
   writeValue(): void {
-    this.elementRef.nativeElement.innerHTML = this.defaultValue() || '';
+    this.elementRef
+    .nativeElement.innerHTML = this.defaultValue() || '';
   }
 
   registerOnChange(fn: any): void {
@@ -45,6 +46,7 @@ export class ControlAccessorDirective implements ControlValueAccessor {
 
   @HostListener('input')
   onInput(): void {
-    this.onChange(this.elementRef.nativeElement.innerHTML);
+    this.onChange(this.elementRef
+      .nativeElement.innerHTML);
   }
 }
