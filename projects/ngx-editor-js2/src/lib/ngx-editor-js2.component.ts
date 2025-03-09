@@ -32,8 +32,8 @@ export class NgxEditorJs2Component {
   blocks = input<NgxEditorJsBlock[]>([]);
   blocksRequested = output<Observable<NgxEditorJsBlock[]>>();
   requestBlocks = input.required({
-    transform: (_v: unknown) =>
-      this.blocksRequested.emit(this.editorJsService.getBlocks$()),
+    transform: (value: unknown) =>
+      value && this.blocksRequested.emit(this.editorJsService.getBlocks$()),
   });
 
   bootstrapEditorJs$ = combineLatest([
