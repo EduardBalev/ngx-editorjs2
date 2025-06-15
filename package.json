@@ -3,12 +3,15 @@
   "version": "19.0.0",
   "scripts": {
     "build-demo": "ng build ngx-editorjs2-demo --configuration production --base-href \"/ngx-editorjs2/\"",
-    "build-ngx-editor-js2": "ng build ngx-editor-js2 --configuration production",
+    "build-ngx-editor-js2": "ng build ngx-editor-js2 --configuration production && npm run postbuild",
     "watch-demo": "ng serve ngx-editorjs2-demo",
-    "watch-ngx-editor-js2": "ng build ngx-editor-js2 --watch --configuration development",
+    "ngx-editor-js2:watch": "ng build ngx-editor-js2 --watch --configuration development",
+    "ngx-editor-js2:postbuild": "chokidar 'dist/ngx-editor-js2/**/*' -i 'dist/ngx-editor-js2/styles/**/*' -c 'npm run postbuild'",
+    "ngx-editor-js2:watch:postbuild": "npm-run-all --parallel ngx-editor-js2:watch ngx-editor-js2:postbuild",
     "test": "ng test ngx-editor-js2 --coverage",
     "test-jest": "jest",
-    "deployDemo": "npx angular-cli-ghpages --dir=dist/ngx-editorjs2-demo/browser"
+    "deployDemo": "npx angular-cli-ghpages --dir=dist/ngx-editorjs2-demo/browser",
+    "postbuild": "node ./postbuild.js"
   },
   "private": false,
   "dependencies": {
@@ -34,10 +37,12 @@
     "@angular/cli": "^19.0.6",
     "@angular/compiler-cli": "^19.0.0",
     "@types/jest": "^29.5.14",
+    "chokidar-cli": "^3.0.0",
     "jest": "^29.7.0",
     "jest-preset-angular": "^14.5.1",
     "ng-mocks": "^14.13.2",
     "ng-packagr": "^19.1.0",
+    "npm-run-all": "^4.1.5",
     "ts-jest": "^29.2.5",
     "typescript": "~5.6.2"
   }

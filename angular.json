@@ -20,9 +20,7 @@
             "outputPath": "dist/ngx-editorjs2-demo",
             "index": "projects/ngx-editorjs2-demo/src/index.html",
             "browser": "projects/ngx-editorjs2-demo/src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/ngx-editorjs2-demo/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -35,7 +33,10 @@
               "@angular/material/prebuilt-themes/azure-blue.css",
               "projects/ngx-editorjs2-demo/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["dist/ngx-editor-js2"]
+            }
           },
           "configurations": {
             "production": {
@@ -79,10 +80,7 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": ["scss"],
             "styles": [
@@ -119,10 +117,7 @@
           "builder": "@angular-builders/jest:run",
           "options": {
             "tsConfig": "tsconfig.spec.json",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ]
+            "polyfills": ["zone.js", "zone.js/testing"]
           }
         }
       }
