@@ -23,6 +23,17 @@ To install Ngx-EditorJs2, run:
 npm install @tmdjr/ngx-editor-js2
 ```
 
+### Adding via Angular CLI (Recommended)
+
+To quickly set up Ngx-EditorJs2 with optional blocks, use Angular's `ng add` command:
+
+```sh
+ng add @tmdjr/ngx-editor-js2
+```
+
+This command will prompt you to select optional blocks and will handle the installation, configuration updates to `angular.json`, global styles, and your application's configuration (`app.config.ts`).
+
+
 ## Usage
 Import the Component into your Angular Standalone Component:
 
