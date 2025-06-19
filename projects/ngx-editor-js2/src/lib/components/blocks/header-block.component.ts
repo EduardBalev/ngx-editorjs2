@@ -8,7 +8,7 @@ import {
   BlockComponent,
   BlockOptionAction,
 } from '../../ngx-editor-js2.interface';
-import { NgSwitch, NgSwitchCase, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -21,47 +21,57 @@ import { CdkDrag } from '@angular/cdk/drag-drop';
     AutofocusDirective,
     ToolbarFabDirective,
     CleanPasteDataDirective,
-    NgSwitch,
-    NgSwitchCase,
-    NgTemplateOutlet,
-  ],
+    NgTemplateOutlet
+],
   template: `
-    <ng-container [ngSwitch]="savedAction()">
-      <h1 *ngSwitchCase="'h1'">
-        <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
-      </h1>
-      <h2 *ngSwitchCase="'h2'">
-        <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
-      </h2>
-      <h3 *ngSwitchCase="'h3'">
-        <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
-      </h3>
-      <h4 *ngSwitchCase="'h4'">
-        <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
-      </h4>
-      <h5 *ngSwitchCase="'h5'">
-        <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
-      </h5>
-      <h6 *ngSwitchCase="'h6'">
-        <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
-      </h6>
-    </ng-container>
+@switch (savedAction()) {
+  @case ('h1') {
+    <h1>
+      <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
+    </h1>
+  }
+  @case ('h2') {
+    <h2>
+      <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
+    </h2>
+  }
+  @case ('h3') {
+    <h3>
+      <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
+    </h3>
+  }
+  @case ('h4') {
+    <h4>
+      <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
+    </h4>
+  }
+  @case ('h5') {
+    <h5>
+      <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
+    </h5>
+  }
+  @case ('h6') {
+    <h6>
+      <ng-container *ngTemplateOutlet="sharedHeaderTemplate"></ng-container>
+    </h6>
+  }
+}
 
-    <ng-template [formGroup]="formGroup()" #sharedHeaderTemplate>
-      <span
-        controlAccessor
-        cleanPasteData
-        contentEditable
-        toolbarFab
-        [defaultValue]="formGroup().get(formControlName())?.value"
-        [actionCallback]="actionCallbackBind"
-        [blockOptionActions]="blockOptionActions()"
-        [autofocus]="autofocus()"
-        [formControlName]="formControlName()"
-        [componentContextPositionIndex]="sortIndex()"
-      ></span>
-    </ng-template>
-  `,
+<ng-template [formGroup]="formGroup()" #sharedHeaderTemplate>
+  <span
+    controlAccessor
+    cleanPasteData
+    contentEditable
+    toolbarFab
+    [defaultValue]="formGroup().get(formControlName())?.value"
+    [actionCallback]="actionCallbackBind"
+    [blockOptionActions]="blockOptionActions()"
+    [autofocus]="autofocus()"
+    [formControlName]="formControlName()"
+    [componentContextPositionIndex]="sortIndex()"
+  ></span>
+</ng-template>
+`,
   styles: [
     `
       :host {
