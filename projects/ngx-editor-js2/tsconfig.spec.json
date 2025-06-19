@@ -1,4 +1,3 @@
-// project ngx-editor-js2 tsconfig.spec.json
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
