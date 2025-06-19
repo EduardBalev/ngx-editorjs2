@@ -6,7 +6,7 @@ DEMO: [https://ba5ik7.github.io/ngx-editorjs2](https://ba5ik7.github.io/ngx-edit
 Ngx-EditorJs2 is an Angular-based, highly extensible block-style editor inspired by Editor.js. It allows users to create and manage rich text content using a variety of customizable blocks while leveraging Angular's reactive capabilities.
 
 ### Supports
-- Angular 19+
+- Angular 20+
 - For legacy Angular support, use [ngx-editorjs](https://github.com/Ba5ik7/ngx-editorjs)
 
 ## Features
