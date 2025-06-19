@@ -1,12 +1,12 @@
 {
   "name": "ngx-editorjs2-demo",
-  "version": "19.0.3",
+  "version": "20.0.0",
   "scripts": {
     "build-demo": "ng build ngx-editorjs2-demo --configuration production --base-href \"/ngx-editorjs2/\"",
     "build-ngx-editor-js2": "ng build ngx-editor-js2 --configuration production && npm run postbuild && npm run build-schematics",
     "watch-demo": "ng serve ngx-editorjs2-demo",
     "ngx-editor-js2:watch": "ng build ngx-editor-js2 --watch --configuration development",
-    "ngx-editor-js2:postbuild": "chokidar 'dist/ngx-editor-js2/**/*' -i 'dist/ngx-editor-js2/styles/**/*' -c 'npm run postbuild'",
+    "ngx-editor-js2:postbuild": "chokidar 'dist/ngx-editor-js2/**/*' -i 'dist/ngx-editor-js2/styles/**/*' -i 'dist/ngx-editor-js2/schematics/**/*' -c 'npm run postbuild'",
     "ngx-editor-js2:watch:postbuild": "npm-run-all --parallel ngx-editor-js2:watch ngx-editor-js2:postbuild",
     "test": "ng test ngx-editor-js2 --coverage",
     "test-jest": "jest",
@@ -17,16 +17,15 @@
   "private": false,
   "dependencies": {
     "@angular/animations": "^20.0.4",
-    "@angular/cdk": "^19.1.0",
+    "@angular/cdk": "^20.0.3",
     "@angular/common": "^20.0.4",
     "@angular/compiler": "^20.0.4",
     "@angular/core": "^20.0.4",
     "@angular/forms": "^20.0.4",
-    "@angular/material": "^19.1.0",
+    "@angular/material": "^20.0.3",
     "@angular/platform-browser": "^20.0.4",
     "@angular/platform-browser-dynamic": "^20.0.4",
     "@angular/router": "^20.0.4",
-    "material": "^0.9.21",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "^0.15.0"
