@@ -8,34 +8,40 @@ import {
 
 const optionalBlocks: Record<
   string,
-  { package: string; stylePath: string; peers: string[] }
+  { name: string; package: string; stylePath: string; peers: string[] }
 > = {
   image: {
+    name: 'ngx-editor-js2-image',
     package: '@tmdjr/ngx-editor-js2-image',
     stylePath: 'dist/ngx-editor-js2-image',
     peers: [],
   },
   popQuiz: {
+    name: 'ngx-editor-js2-pop-quiz',
     package: '@tmdjr/ngx-editor-js2-pop-quiz',
     stylePath: 'dist/ngx-editor-js2-pop-quiz',
     peers: [],
   },
   mermaidjs: {
+    name: 'ngx-editor-js2-mermaidjs',
     package: '@tmdjr/ngx-editor-js2-mermaidjs',
     stylePath: 'dist/ngx-editor-js2-mermaidjs',
     peers: ['mermaid', '@ctrl/ngx-codemirror', '@types/codemirror'],
   },
   codemirror: {
+    name: 'ngx-editor-js2-codemirror',
     package: '@tmdjr/ngx-editor-js2-codemirror',
     stylePath: 'dist/ngx-editor-js2-codemirror',
     peers: ['@ctrl/ngx-codemirror', '@types/codemirror'],
   },
   mfeLoader: {
+    name: 'ngx-editor-js2-mfe-loader',
     package: '@tmdjr/ngx-editor-js2-mfe-loader',
     stylePath: 'dist/ngx-editor-js2-mfe-loader',
     peers: ['@angular-architects/module-federation'],
   },
   blockquotes: {
+    name: 'ngx-editor-js2-blockquotes',
     package: '@tmdjr/ngx-editor-js2-blockquotes',
     stylePath: 'dist/ngx-editor-js2-blockquotes',
     peers: [],
@@ -138,7 +144,7 @@ function updateStylesScss(
   let content = tree.read(stylePath)!.toString();
 
   blocks.forEach((block) => {
-    const importLine = `@use '${optionalBlocks[block].package}/styles/drag-preview.scss';`;
+    const importLine = `@use '${optionalBlocks[block].package}/styles/${optionalBlocks[block].name}-drag-preview.scss';`;
 
     if (!content.includes(importLine)) {
       content = `${importLine}\n${content}`;
