@@ -75,7 +75,7 @@ export function ngAdd(): Rule {
 
     context.addTask(new NodePackageInstallTask());
 
-    const sourceRoot = await updateAngularJson(tree, response.blocks, context);
+    const sourceRoot = await getSourceRoot(tree, context);
 
     updateStylesScss(tree, response.blocks, context, sourceRoot);
 
@@ -87,13 +87,11 @@ export function ngAdd(): Rule {
   };
 }
 
-async function updateAngularJson(
+async function getSourceRoot(
   tree: Tree,
-  blocks: string[],
   context: SchematicContext
 ): Promise<string> {
-  const angularJsonPath = '/angular.json';
-  const buffer = tree.read(angularJsonPath);
+  const buffer = tree.read('/angular.json');
 
   if (!buffer) {
     context.logger.error('❌ angular.json not found.');
@@ -102,7 +100,6 @@ async function updateAngularJson(
 
   const angularJson = JSON.parse(buffer.toString());
 
-  // const project = angularJson.defaultProject;
   // We need to get every project in the workspace
   const projects = Object.keys(angularJson.projects);
   // We will prompt the user to select a project
@@ -122,29 +119,7 @@ async function updateAngularJson(
     throw new Error(`Project ${project} not found in angular.json`);
   }
 
-  const includePaths =
-    angularJson.projects[project].architect.build.options
-      .stylePreprocessorOptions?.includePaths || [];
-
-  includePaths.push('dist/ngx-editor-js2');
-  blocks.forEach((block) => {
-    const stylePath = optionalBlocks[block].stylePath;
-    if (!includePaths.includes(stylePath)) {
-      includePaths.push(stylePath);
-    }
-  });
-
-  angularJson.projects[
-    project
-  ].architect.build.options.stylePreprocessorOptions = { includePaths };
-  tree.overwrite(angularJsonPath, JSON.stringify(angularJson, null, 2));
-
-  context.logger.info('🔧 angular.json updated successfully.');
-
-  return (
-    angularJson.projects[project].sourceRoot ||
-    angularJson.projects[project].root
-  );
+  return angularJson.projects[project].sourceRoot;
 }
 
 function updateStylesScss(
@@ -163,12 +138,14 @@ function updateStylesScss(
   let content = tree.read(stylePath)!.toString();
 
   blocks.forEach((block) => {
-    const importLine = `@use 'styles/drag-preview.scss';`;
+    const importLine = `@use '${optionalBlocks[block].package}/styles/drag-preview.scss';`;
 
     if (!content.includes(importLine)) {
       content = `${importLine}\n${content}`;
     }
   });
+
+  content = `@use '@tmdjr/ngx-editor-js2/styles/drag-preview.scss';\n${content}`;
 
   tree.overwrite(stylePath, content);
   context.logger.info('🎨 styles.scss updated successfully.');
@@ -244,3 +221,63 @@ function updateAppConfig(
   tree.overwrite(appConfigPath, content);
   context.logger.info('🚀 app.config.ts updated successfully.');
 }
+
+// async function updateAngularJson(
+//   tree: Tree,
+//   blocks: string[],
+//   context: SchematicContext
+// ): Promise<string> {
+//   const angularJsonPath = '/angular.json';
+//   const buffer = tree.read(angularJsonPath);
+
+//   if (!buffer) {
+//     context.logger.error('❌ angular.json not found.');
+//     throw new Error('angular.json not found... get good');
+//   }
+
+//   const angularJson = JSON.parse(buffer.toString());
+
+//   // const project = angularJson.defaultProject;
+//   // We need to get every project in the workspace
+//   const projects = Object.keys(angularJson.projects);
+//   // We will prompt the user to select a project
+//   const response = await prompt<{ project: string }>({
+//     type: 'select',
+//     name: 'project',
+//     message: 'Select the Angular project to update:',
+//     choices: projects.map((project) => ({
+//       name: project,
+//       message: project,
+//     })),
+//   });
+//   const project = response.project;
+
+//   if (!project || !angularJson.projects[project]) {
+//     context.logger.error(`❌ Project ${project} not found in angular.json.`);
+//     throw new Error(`Project ${project} not found in angular.json`);
+//   }
+
+//   const includePaths =
+//     angularJson.projects[project].architect.build.options
+//       .stylePreprocessorOptions?.includePaths || [];
+
+//   includePaths.push('dist/ngx-editor-js2');
+//   blocks.forEach((block) => {
+//     const stylePath = optionalBlocks[block].stylePath;
+//     if (!includePaths.includes(stylePath)) {
+//       includePaths.push(stylePath);
+//     }
+//   });
+
+//   angularJson.projects[
+//     project
+//   ].architect.build.options.stylePreprocessorOptions = { includePaths };
+//   tree.overwrite(angularJsonPath, JSON.stringify(angularJson, null, 2));
+
+//   context.logger.info('🔧 angular.json updated successfully.');
+
+//   return (
+//     angularJson.projects[project].sourceRoot ||
+//     angularJson.projects[project].root
+//   );
+// }
