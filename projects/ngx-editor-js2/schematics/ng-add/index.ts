@@ -87,6 +87,8 @@ export function ngAdd(): Rule {
 
     updateAppConfig(tree, response.blocks, context, sourceRoot);
 
+    addCodeMirrorSetup(tree, response.blocks, context, sourceRoot);
+
     context.logger.info('✅ Installation setup complete.');
 
     return tree;
@@ -226,6 +228,62 @@ function updateAppConfig(
 
   tree.overwrite(appConfigPath, content);
   context.logger.info('🚀 app.config.ts updated successfully.');
+}
+
+function addCodeMirrorSetup(
+  tree: Tree,
+  selectedBlocks: string[],
+  context: SchematicContext,
+  sourceRoot: string
+): void {
+  const needsCodeMirror = selectedBlocks.some((block) =>
+    ['ngx-editor-js2-codemirror', 'ngx-editor-js2-mermaidjs'].includes(block)
+  );
+
+  if (!needsCodeMirror) {
+    context.logger.info(
+      'CodeMirror dependencies not selected; skipping setup.'
+    );
+    return;
+  }
+
+  const bootstrapPath = `${sourceRoot}/bootstrap.ts`;
+  const stylesPath = `${sourceRoot}/styles.scss`;
+
+  // Update bootstrap.ts
+  if (tree.exists(bootstrapPath)) {
+    const bootstrapContent = tree.read(bootstrapPath)!.toString();
+
+    const codeMirrorImports = `
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/css/css';
+import 'codemirror/mode/xml/xml';
+`;
+
+    if (!bootstrapContent.includes('CODEMIRROR Dependencies')) {
+      tree.overwrite(bootstrapPath, bootstrapContent + codeMirrorImports);
+      context.logger.info('CodeMirror imports added to bootstrap.ts');
+    }
+  } else {
+    context.logger.warn(`bootstrap.ts not found at path: ${bootstrapPath}`);
+  }
+
+  // Update styles.scss
+  if (tree.exists(stylesPath)) {
+    const stylesContent = tree.read(stylesPath)!.toString();
+
+    const codeMirrorStyles = `
+@use "codemirror/lib/codemirror";
+@use "codemirror/theme/material-palenight";
+`;
+
+    if (!stylesContent.includes('CODEMIRROR Dependencies')) {
+      tree.overwrite(stylesPath, stylesContent + codeMirrorStyles);
+      context.logger.info('CodeMirror styles added to styles.scss');
+    }
+  } else {
+    context.logger.warn(`styles.scss not found at path: ${stylesPath}`);
+  }
 }
 
 // async function updateAngularJson(
