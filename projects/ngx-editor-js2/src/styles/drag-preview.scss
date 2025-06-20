@@ -2,7 +2,7 @@
   overflow: visible;
   color: var(--mat-sys-on-secondary-container);
   background-color: var(--mat-sys-secondary-container);
-  border-radius: var(--mdc-outlined-card-container-shape, var(--mat-sys-corner-medium));
+  border-radius: var(--mat-card-outlined-container-shape, var(--mat-sys-corner-medium));
   box-shadow: var(--mat-sys-level4);
 
   & *:not(toolbar) {
