@@ -54,34 +54,6 @@ import { NgxEditorJs2Component } from '@tmdjr/ngx-editor-js2';
 ```
 - Implementation found in the [Demo Src](https://github.com/Ba5ik7/ngx-editor-js2-blocks/blob/main/projects/demo/src/app/app.component.ts)
 
-Css is required for the editor to function properly. Add the following to your global styles:
-
-```css
-// ! I Need to fix this!!
-// The consumer should not have to incude this in their styles.scss
-.cdk-drag-preview {
-  color: var(--mat-sys-on-secondary-container);
-  background-color: var(--mat-sys-secondary-container);
-  border-radius: 8px;
-  box-sizing: border-box;
-  overflow: visible;
-  box-shadow: var(--mat-sys-level4);
-
-  & *:not(toolbar) {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
-
-.cdk-drag-placeholder {
-  opacity: 0;
-}
-
-.cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-```
-
 
 ## API
 ### **Inputs**
