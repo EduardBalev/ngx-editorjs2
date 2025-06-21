@@ -1,4 +1,15 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import {
+  apply,
+  applyTemplates,
+  mergeWith,
+  move,
+  Rule,
+  chain,
+  SchematicContext,
+  Tree,
+  url,
+  MergeStrategy,
+} from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import {
   addPackageJsonDependency,
@@ -31,7 +42,7 @@ const optionalBlocks: Record<
     package: '@tmdjr/ngx-editor-js2-mermaidjs',
     stylePath: 'dist/ngx-editor-js2-mermaidjs',
     peers: [
-      { package: 'mermaid' },
+      { package: 'mermaid', version: '^11.6.0' },
       { package: '@ctrl/ngx-codemirror' },
       { package: '@types/codemirror' },
       { package: 'codemirror', version: '5.65.9' },
@@ -63,6 +74,7 @@ const optionalBlocks: Record<
 
 export function ngAdd(options: any): Rule {
   return async (tree: Tree, context: SchematicContext) => {
+    const rules: Rule[] = [];
     const blocks: string[] = options.blocks || [];
 
     blocks.forEach((block) => {
@@ -94,9 +106,30 @@ export function ngAdd(options: any): Rule {
     updateAppConfig(tree, blocks, context, sourceRoot);
     addCodeMirrorSetup(tree, blocks, context, sourceRoot);
 
-    context.logger.info('✅ Installation setup complete.');
+    if (options.demo) {
+  const appPath = `${sourceRoot}/app`;
 
-    return tree;
+  if (tree.exists(appPath)) {
+    context.logger.warn(`⚠️ Deleting existing app folder at ${appPath}`);
+    // Ensure complete removal of the app directory and its content
+    tree.delete(appPath);
+  }
+
+  rules.push(
+    mergeWith(
+      apply(url('./files/demo'), [
+        applyTemplates({}),
+        move(appPath),
+      ]),
+      MergeStrategy.Overwrite, // Explicitly overwrite files
+    )
+  );
+
+  context.logger.info(`🚨 Demo files copied to ${appPath}. Existing app was replaced!`);
+}
+
+    context.logger.info('✅ Installation setup complete.');
+    return chain(rules);
   };
 }
 

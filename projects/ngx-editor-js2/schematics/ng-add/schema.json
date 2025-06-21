@@ -25,6 +25,12 @@
       "type": "string",
       "description": "The Angular project to update",
       "x-prompt": "Which Angular project would you like to update?"
+    },
+    "demo": {
+      "type": "boolean",
+      "default": false,
+      "description": "Add component and service",
+      "x-prompt": "Would you like to create demo of ng-editor-js2?"
     }
   }
 }
