@@ -22,7 +22,7 @@ import { BlockComponent, SupportedBlock } from '../../ngx-editor-js2.interface';
     AsyncPipe,
   ],
   template: `
-    <div class="block-list-container mat-elevation-z24">
+    <div class="block-list-container">
       <mat-form-field appearance="fill" color="accent">
         <mat-label>Filter</mat-label>
         <input
@@ -54,8 +54,9 @@ import { BlockComponent, SupportedBlock } from '../../ngx-editor-js2.interface';
         }
 
         .block-list-container {
-          background: var(--mat-sys-secondary-container);
           border-radius: 4px;
+          background: var(--mat-sys-secondary-container);
+          box-shadow: var(--mat-sys-level5);
         }
 
         .block-list-panel {

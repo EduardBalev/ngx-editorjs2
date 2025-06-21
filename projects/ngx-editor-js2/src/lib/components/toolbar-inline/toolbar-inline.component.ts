@@ -15,7 +15,6 @@ import { MatListModule } from '@angular/material/list';
 @Component({
   selector: 'toolbar-inline',
   imports: [MatListModule, MatIconModule, FormsModule],
-  host: { class: 'mat-elevation-z24' },
   template: `
     <div class="panel">
       @for (item of options; track $index) {
@@ -53,6 +52,7 @@ import { MatListModule } from '@angular/material/list';
       :host {
         color: var(--mat-sys-on-secondary);
         background: var(--mat-sys-secondary);
+        box-shadow: var(--mat-sys-level5);
         border-radius: 8px;
         .panel {
           display: flex;

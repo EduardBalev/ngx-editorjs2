@@ -26,7 +26,7 @@ import {
   template: `
     <div class="toolbar-buttons-container">
       <div
-        class="toolbar-buttons mat-elevation-z4"
+        class="toolbar-buttons"
         #blockListTigger="cdkOverlayOrigin"
         cdkOverlayOrigin
         matRipple
@@ -35,7 +35,7 @@ import {
         <span class="material-icons">add</span>
       </div>
       <div
-        class="toolbar-buttons mat-elevation-z4"
+        class="toolbar-buttons"
         #blockOptionListTigger="cdkOverlayOrigin"
         cdkDragHandle
         cdkOverlayOrigin
@@ -100,6 +100,7 @@ import {
           user-select: none;
           color: var(--mat-sys-on-tertiary-container);
           background: var(--mat-sys-tertiary-container);
+          box-shadow: var(--mat-sys-level2);
         }
         .toolbar-buttons {
           &:hover,

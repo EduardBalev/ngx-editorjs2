@@ -10,7 +10,7 @@ import {
   selector: 'toolbar-block-options',
   imports: [MatIcon, MatRipple],
   template: `
-    <div class="actions-panel mat-elevation-z24">
+    <div class="actions-panel">
       <div class="action-btn" matRipple (click)="movePosition(Position.UP)">
         <mat-icon>arrow_upward</mat-icon>
       </div>
@@ -48,6 +48,7 @@ import {
           border-radius: 4px;
           overflow: auto;
           background: var(--mat-sys-secondary);
+          box-shadow: var(--mat-sys-level5);
           .action-btn {
             cursor: pointer;
             width: 42px;

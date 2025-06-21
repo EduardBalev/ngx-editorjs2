@@ -120,8 +120,3 @@ body {
   flex-grow: 1;
 }
 
-@for $i from 0 through 24 {
-  .mat-elevation-z#{$i} {
-    @include mat.elevation($i);
-  }
-}
