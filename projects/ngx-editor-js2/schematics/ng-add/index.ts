@@ -1,5 +1,4 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import { prompt } from 'enquirer';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import {
   addPackageJsonDependency,
@@ -8,7 +7,12 @@ import {
 
 const optionalBlocks: Record<
   string,
-  { name: string; package: string; stylePath: string; peers: string[] }
+  {
+    name: string;
+    package: string;
+    stylePath: string;
+    peers: { package: string; version?: string }[];
+  }
 > = {
   image: {
     name: 'ngx-editor-js2-image',
@@ -26,19 +30,28 @@ const optionalBlocks: Record<
     name: 'ngx-editor-js2-mermaidjs',
     package: '@tmdjr/ngx-editor-js2-mermaidjs',
     stylePath: 'dist/ngx-editor-js2-mermaidjs',
-    peers: ['mermaid', '@ctrl/ngx-codemirror', '@types/codemirror'],
+    peers: [
+      { package: 'mermaid' },
+      { package: '@ctrl/ngx-codemirror' },
+      { package: '@types/codemirror' },
+      { package: 'codemirror', version: '5.65.9' },
+    ],
   },
   codemirror: {
     name: 'ngx-editor-js2-codemirror',
     package: '@tmdjr/ngx-editor-js2-codemirror',
     stylePath: 'dist/ngx-editor-js2-codemirror',
-    peers: ['@ctrl/ngx-codemirror', '@types/codemirror'],
+    peers: [
+      { package: '@ctrl/ngx-codemirror' },
+      { package: '@types/codemirror' },
+      { package: 'codemirror', version: '5.65.9' },
+    ],
   },
   mfeLoader: {
     name: 'ngx-editor-js2-mfe-loader',
     package: '@tmdjr/ngx-editor-js2-mfe-loader',
     stylePath: 'dist/ngx-editor-js2-mfe-loader',
-    peers: ['@angular-architects/module-federation'],
+    peers: [{ package: '@angular-architects/module-federation' }],
   },
   blockquotes: {
     name: 'ngx-editor-js2-blockquotes',
@@ -48,19 +61,11 @@ const optionalBlocks: Record<
   },
 };
 
-export function ngAdd(): Rule {
+export function ngAdd(options: any): Rule {
   return async (tree: Tree, context: SchematicContext) => {
-    const response = await prompt<{ blocks: string[] }>({
-      type: 'multiselect',
-      name: 'blocks',
-      message: 'Select optional Ngx-Editor-JS2 blocks to install:',
-      choices: Object.keys(optionalBlocks).map((block) => ({
-        name: block,
-        message: block,
-      })),
-    });
+    const blocks: string[] = options.blocks || [];
 
-    response.blocks.forEach((block) => {
+    blocks.forEach((block) => {
       const { package: pkg, peers } = optionalBlocks[block];
       addPackageJsonDependency(tree, {
         type: NodeDependencyType.Default,
@@ -68,66 +73,31 @@ export function ngAdd(): Rule {
         version: 'latest',
       });
       peers.forEach((peer) => {
-        const type = peer.startsWith('@types/')
+        const type = peer.package.startsWith('@types/')
           ? NodeDependencyType.Dev
           : NodeDependencyType.Default;
         addPackageJsonDependency(tree, {
           type,
-          name: peer,
-          version: 'latest',
+          name: peer.package,
+          version: peer.version ?? 'latest',
         });
       });
     });
 
     context.addTask(new NodePackageInstallTask());
 
-    const sourceRoot = await getSourceRoot(tree, context);
+    const sourceRoot = options.project
+      ? getProjectSourceRoot(tree, options.project)
+      : 'src';
 
-    updateStylesScss(tree, response.blocks, context, sourceRoot);
-
-    updateAppConfig(tree, response.blocks, context, sourceRoot);
-
-    addCodeMirrorSetup(tree, response.blocks, context, sourceRoot);
+    updateStylesScss(tree, blocks, context, sourceRoot);
+    updateAppConfig(tree, blocks, context, sourceRoot);
+    addCodeMirrorSetup(tree, blocks, context, sourceRoot);
 
     context.logger.info('✅ Installation setup complete.');
 
     return tree;
   };
-}
-
-async function getSourceRoot(
-  tree: Tree,
-  context: SchematicContext
-): Promise<string> {
-  const buffer = tree.read('/angular.json');
-
-  if (!buffer) {
-    context.logger.error('❌ angular.json not found.');
-    throw new Error('angular.json not found... get good');
-  }
-
-  const angularJson = JSON.parse(buffer.toString());
-
-  // We need to get every project in the workspace
-  const projects = Object.keys(angularJson.projects);
-  // We will prompt the user to select a project
-  const response = await prompt<{ project: string }>({
-    type: 'select',
-    name: 'project',
-    message: 'Select the Angular project to update:',
-    choices: projects.map((project) => ({
-      name: project,
-      message: project,
-    })),
-  });
-  const project = response.project;
-
-  if (!project || !angularJson.projects[project]) {
-    context.logger.error(`❌ Project ${project} not found in angular.json.`);
-    throw new Error(`Project ${project} not found in angular.json`);
-  }
-
-  return angularJson.projects[project].sourceRoot;
 }
 
 function updateStylesScss(
@@ -237,7 +207,7 @@ function addCodeMirrorSetup(
   sourceRoot: string
 ): void {
   const needsCodeMirror = selectedBlocks.some((block) =>
-    ['ngx-editor-js2-codemirror', 'ngx-editor-js2-mermaidjs'].includes(block)
+    ['codemirror', 'mermaidjs'].includes(block)
   );
 
   if (!needsCodeMirror) {
@@ -247,7 +217,8 @@ function addCodeMirrorSetup(
     return;
   }
 
-  const bootstrapPath = `${sourceRoot}/bootstrap.ts`;
+  // const bootstrapPath = `${sourceRoot}/bootstrap.ts`; // 20 change the location and name
+  const bootstrapPath = `${sourceRoot}/main.ts`;
   const stylesPath = `${sourceRoot}/styles.scss`;
 
   // Update bootstrap.ts
@@ -278,7 +249,7 @@ import 'codemirror/mode/xml/xml';
 `;
 
     if (!stylesContent.includes('CODEMIRROR Dependencies')) {
-      tree.overwrite(stylesPath, stylesContent + codeMirrorStyles);
+      tree.overwrite(stylesPath, codeMirrorStyles + stylesContent);
       context.logger.info('CodeMirror styles added to styles.scss');
     }
   } else {
@@ -286,62 +257,11 @@ import 'codemirror/mode/xml/xml';
   }
 }
 
-// async function updateAngularJson(
-//   tree: Tree,
-//   blocks: string[],
-//   context: SchematicContext
-// ): Promise<string> {
-//   const angularJsonPath = '/angular.json';
-//   const buffer = tree.read(angularJsonPath);
-
-//   if (!buffer) {
-//     context.logger.error('❌ angular.json not found.');
-//     throw new Error('angular.json not found... get good');
-//   }
-
-//   const angularJson = JSON.parse(buffer.toString());
-
-//   // const project = angularJson.defaultProject;
-//   // We need to get every project in the workspace
-//   const projects = Object.keys(angularJson.projects);
-//   // We will prompt the user to select a project
-//   const response = await prompt<{ project: string }>({
-//     type: 'select',
-//     name: 'project',
-//     message: 'Select the Angular project to update:',
-//     choices: projects.map((project) => ({
-//       name: project,
-//       message: project,
-//     })),
-//   });
-//   const project = response.project;
-
-//   if (!project || !angularJson.projects[project]) {
-//     context.logger.error(`❌ Project ${project} not found in angular.json.`);
-//     throw new Error(`Project ${project} not found in angular.json`);
-//   }
-
-//   const includePaths =
-//     angularJson.projects[project].architect.build.options
-//       .stylePreprocessorOptions?.includePaths || [];
-
-//   includePaths.push('dist/ngx-editor-js2');
-//   blocks.forEach((block) => {
-//     const stylePath = optionalBlocks[block].stylePath;
-//     if (!includePaths.includes(stylePath)) {
-//       includePaths.push(stylePath);
-//     }
-//   });
-
-//   angularJson.projects[
-//     project
-//   ].architect.build.options.stylePreprocessorOptions = { includePaths };
-//   tree.overwrite(angularJsonPath, JSON.stringify(angularJson, null, 2));
-
-//   context.logger.info('🔧 angular.json updated successfully.');
-
-//   return (
-//     angularJson.projects[project].sourceRoot ||
-//     angularJson.projects[project].root
-//   );
-// }
+function getProjectSourceRoot(tree: Tree, projectName: string): string {
+  const buffer = tree.read('/angular.json');
+  if (!buffer) throw new Error('angular.json not found');
+  const workspace = JSON.parse(buffer.toString());
+  const project = workspace.projects[projectName];
+  if (!project) throw new Error(`Project ${projectName} not found`);
+  return project.sourceRoot || 'src';
+}

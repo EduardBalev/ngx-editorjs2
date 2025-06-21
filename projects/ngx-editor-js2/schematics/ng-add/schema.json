@@ -1,7 +1,30 @@
 {
-  "$schema": "http://json-schema.org/schema",
+  "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "NgAdd",
   "title": "Ng Add Options",
   "type": "object",
-  "properties": {}
+  "properties": {
+    "blocks": {
+      "type": "array",
+      "description": "Optional Ngx-Editor-JS2 blocks to install",
+      "x-prompt": {
+        "message": "Select optional Ngx-Editor-JS2 blocks to install:",
+        "type": "list",
+        "multiselect": true,
+        "items": [
+          { "value": "image", "label": "Image" },
+          { "value": "popQuiz", "label": "Pop Quiz" },
+          { "value": "mermaidjs", "label": "MermaidJS" },
+          { "value": "codemirror", "label": "CodeMirror" },
+          { "value": "mfeLoader", "label": "MFE Loader" },
+          { "value": "blockquotes", "label": "Blockquotes" }
+        ]
+      }
+    },
+    "project": {
+      "type": "string",
+      "description": "The Angular project to update",
+      "x-prompt": "Which Angular project would you like to update?"
+    }
+  }
 }
