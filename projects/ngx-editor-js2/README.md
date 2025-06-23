@@ -6,7 +6,7 @@ DEMO: [https://ba5ik7.github.io/ngx-editorjs2](https://ba5ik7.github.io/ngx-edit
 Ngx-EditorJs2 is an Angular-based, highly extensible block-style editor inspired by Editor.js. It allows users to create and manage rich text content using a variety of customizable blocks while leveraging Angular's reactive capabilities.
 
 ### Supports
-- Angular 19+
+- Angular 20+
 - For legacy Angular support, use [ngx-editorjs](https://github.com/Ba5ik7/ngx-editorjs)
 
 ## Features
@@ -22,6 +22,17 @@ To install Ngx-EditorJs2, run:
 ```sh
 npm install @tmdjr/ngx-editor-js2
 ```
+
+### Adding via Angular CLI (Recommended)
+
+To quickly set up Ngx-EditorJs2 with optional blocks, use Angular's `ng add` command:
+
+```sh
+ng add @tmdjr/ngx-editor-js2
+```
+
+This command will prompt you to select optional blocks and will handle the installation, configuration updates to `angular.json`, global styles, and your application's configuration (`app.config.ts`).
+
 
 ## Usage
 Import the Component into your Angular Standalone Component:
@@ -42,34 +53,6 @@ import { NgxEditorJs2Component } from '@tmdjr/ngx-editor-js2';
 })
 ```
 - Implementation found in the [Demo Src](https://github.com/Ba5ik7/ngx-editor-js2-blocks/blob/main/projects/demo/src/app/app.component.ts)
-
-Css is required for the editor to function properly. Add the following to your global styles:
-
-```css
-// ! I Need to fix this!!
-// The consumer should not have to incude this in their styles.scss
-.cdk-drag-preview {
-  color: var(--mat-sys-on-secondary-container);
-  background-color: var(--mat-sys-secondary-container);
-  border-radius: 8px;
-  box-sizing: border-box;
-  overflow: visible;
-  box-shadow: var(--mat-sys-level4);
-
-  & *:not(toolbar) {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-}
-
-.cdk-drag-placeholder {
-  opacity: 0;
-}
-
-.cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-```
 
 
 ## API
@@ -155,7 +138,43 @@ Embed syntax-highlighted code snippets using CodeMirror.
 
 ---
 
-For more details and documentation, visit the official repository.
+### 🌐 MFE Loader Block
+Dynamically load and embed micro-frontends using Module Federation.
+
+- **Component:** `NgxEditorJs2MfeLoaderComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-mfe-loader
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-mfe-loader](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-mfe-loader)
+
+---
+
+### 🧩 MermaidJS Block
+Embed interactive Mermaid diagrams for flowcharts, graphs, and more.
+
+- **Component:** `NgxEditorJs2MermaidjsComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-mermaidjs
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-mermaidjs](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-mermaidjs)
+
+---
+
+### 🧐 Pop Quiz Block
+Create engaging quizzes within your content for interactive learning.
+
+- **Component:** `NgxEditorJs2PopQuizComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-pop-quiz
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-pop-quiz](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-pop-quiz)
+
+---
+
+For more details and documentation, visit the [official repository](https://github.com/Ba5ik7/ngx-editor-js2-blocks).
 
 
 
