@@ -138,7 +138,43 @@ Embed syntax-highlighted code snippets using CodeMirror.
 
 ---
 
-For more details and documentation, visit the official repository.
+### 🌐 MFE Loader Block
+Dynamically load and embed micro-frontends using Module Federation.
+
+- **Component:** `NgxEditorJs2MfeLoaderComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-mfe-loader
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-mfe-loader](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-mfe-loader)
+
+---
+
+### 🧩 MermaidJS Block
+Embed interactive Mermaid diagrams for flowcharts, graphs, and more.
+
+- **Component:** `NgxEditorJs2MermaidjsComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-mermaidjs
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-mermaidjs](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-mermaidjs)
+
+---
+
+### 🧐 Pop Quiz Block
+Create engaging quizzes within your content for interactive learning.
+
+- **Component:** `NgxEditorJs2PopQuizComponent`
+- **Install:**
+  ```sh
+  npm install @tmdjr/ngx-editor-js2-pop-quiz
+  ```
+- **Package:** [@tmdjr/ngx-editor-js2-pop-quiz](https://www.npmjs.com/package/@tmdjr/ngx-editor-js2-pop-quiz)
+
+---
+
+For more details and documentation, visit the [official repository](https://github.com/Ba5ik7/ngx-editor-js2-blocks).
 
 
 
