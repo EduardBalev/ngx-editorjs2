@@ -1,5 +1,7 @@
 # Ngx-EditorJs2
 
+DEMO - With blocks: [https://ba5ik7.github.io/ngx-editor-js2-blocks](https://ba5ik7.github.io/ngx-editor-js2-blocks)
+
 DEMO: [https://ba5ik7.github.io/ngx-editorjs2](https://ba5ik7.github.io/ngx-editorjs2)
 
 ## Overview
